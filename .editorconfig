@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# CS0642: 可能誤用了空白的陳述式
+dotnet_diagnostic.CS0642.severity = none

@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/GameTitle.unity
+    guid: 4c6fee6f5e821f44aaa132d92d2401ec
+  - enabled: 1
+    path: Assets/Scenes/EdwinHouse.unity
+    guid: f40bcca04957e44588419f0b487bc4a8
+  - enabled: 1
+    path: Assets/Scenes/Map.unity
+    guid: cb092b842770c430c87a877cc2917ea9
+  - enabled: 1
+    path: Assets/Scenes/TrainSystem.unity
+    guid: e9f821814fecccc42bc3b658e784df9d
+  - enabled: 1
+    path: Assets/Scenes/MultiplicationSystem.unity
+    guid: 11ee50571f76f0d46bd4ad0936353a13
+  - enabled: 1
+    path: Assets/BattleSystem/BattleSystemScene/Battle.unity
+    guid: 51d19e08d4c7f874f8c8f2317689f2f3
+  - enabled: 1
+    path: Assets/BattleSystem/BattleSystemScene/Lose.unity
+    guid: 178ec25ff1df8264ba2882092784d612
+  - enabled: 1
+    path: Assets/BattleSystem/BattleSystemScene/Win.unity
+    guid: 31123a412e719464bac4f90fb48acaff
+  - enabled: 1
+    path: Assets/BattleSystem/BattleSystemScene/Tutorial.unity
+    guid: 3f0a75b5809742348864a840ce4e4c8f
+  m_configObjects: {}
