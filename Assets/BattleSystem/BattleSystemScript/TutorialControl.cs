@@ -95,7 +95,7 @@ public class TutorialControl : MonoBehaviour
         yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.LeftArrow));
         tutorialState = 3;
         StartCoroutine(PlayerFirstAttack());
-        yield return new WaitUntil(() => playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("feather ability01 hit completely"));
+        yield return new WaitUntil(() => playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Feather Hit Complete"));
         isTalking = true;
         tutorialState = 4;
         StartCoroutine(NipliseGotCrazy());
@@ -186,11 +186,11 @@ public class TutorialControl : MonoBehaviour
     public IEnumerator PlayerFirstAttack()
     {
         BattleSystem.ability01.hitRate = 1000;
-        print("玩家使用小招");
+        print("玩家使用攻擊");
         BattleSystem.player.hitRecoveryTime = BattleSystem.player.attackStartHitRecoveryTime + BattleSystem.player.attackCompleteHitRecoveryTime;
         BattleSystem.player.hitRecoveryTimeMax = BattleSystem.player.hitRecoveryTime;
         BattleSystem.player.isHitRecovery = true;
-        playerAnimator.SetInteger("Status", 1);
+        playerAnimator.SetTrigger("Attack");
         yield return null;
     }
     public IEnumerator NipliseGotCrazy()

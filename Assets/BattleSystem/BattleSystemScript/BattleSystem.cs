@@ -113,6 +113,10 @@ namespace NameBattleSystem
         public GameObject PlayerPart01;
         public GameObject PlayerPart02;
         public GameObject PlayerPart03;
+        public GameObject PlayerPart04;
+        public GameObject PlayerPart05;
+        public GameObject PlayerPart06;
+        public GameObject PlayerPart07;
         public GameObject Enemy;
         public GameObject EnemyEmpty;
         public GameObject leftHpBar;
@@ -248,12 +252,10 @@ namespace NameBattleSystem
             //rightMdefBar.transform.localRotation = Quaternion.Euler(0, 0, -176.8f + 150.9f * (enemy.mDef / enemy.maxMDef));
 
             CDBar.transform.localScale = new Vector3(this.transform.localScale.x, (LCD / LCDMax), this.transform.localScale.z);
-            print(LCDMax);
-            print(ability01.cd);
 
             hitRecoveryBarMask01.transform.localScale = new Vector3(this.transform.localScale.x, (player.hitRecoveryTime / player.hitRecoveryTimeMax), this.transform.localScale.z);
             hitRecoveryBarMask02.transform.localScale = new Vector3(this.transform.localScale.x, (player.hitRecoveryTime / player.hitRecoveryTimeMax), this.transform.localScale.z);
-            playerParryShield.transform.position = new Vector3(Player.transform.position.x, Player.transform.position.y);
+            playerParryShield.transform.position = new Vector3(PlayerPart01.transform.position.x, PlayerPart01.transform.position.y);
 
         }
         void FixedUpdate()
@@ -299,7 +301,7 @@ namespace NameBattleSystem
             }
             else
             {
-                playerShield.transform.position = Player.transform.position;
+                playerShield.transform.position = PlayerPart01.transform.position;
             }
             if (enemy.energy >= 0.95f * ability05.needEnergy && RCD02 <= 0 && enemy.isHitRecovery == false && motionStop == false)
             {
@@ -380,7 +382,7 @@ namespace NameBattleSystem
                 {
                     print("玩家使用攻擊");
                     player.hitRecoveryTime = player.attackStartHitRecoveryTime + player.attackCompleteHitRecoveryTime;
-                    player.hitRecoveryTimeMax = player.hitRecoveryTime;
+                    player.hitRecoveryTimeMax = player.attackStartHitRecoveryTime + player.attackCompleteHitRecoveryTime;
                     player.isHitRecovery = true;
                     playerAnimation.SetTrigger("Attack");
                     PressAttackButton.SetActive(true);
@@ -395,7 +397,7 @@ namespace NameBattleSystem
                 player.energy = ability02.needEnergy;
                 StartCoroutine(NumberChange(ability02.needEnergy, player, "costEnergy"));
                 player.hitRecoveryTime = player.abilityStartHitRecoveryTime + player.abilityEndHitRecoveryTime;
-                player.hitRecoveryTimeMax = player.hitRecoveryTime;
+                player.hitRecoveryTimeMax = player.abilityStartHitRecoveryTime + player.abilityEndHitRecoveryTime;
                 player.isHitRecovery = true;
                 playerAnimation.SetTrigger("Ability");
                 StartCoroutine(AbilityButtonPress());
@@ -525,7 +527,7 @@ namespace NameBattleSystem
             if (LCD <= 0 && Time.timeScale == 1 && player.isHitRecovery == false && control.isCatching == false && motionStop == false)
             {
                 player.hitRecoveryTime = player.attackStartHitRecoveryTime + player.attackCompleteHitRecoveryTime;
-                player.hitRecoveryTimeMax = player.hitRecoveryTime;
+                player.hitRecoveryTimeMax = player.attackStartHitRecoveryTime + player.attackCompleteHitRecoveryTime;
                 player.isHitRecovery = true;
                 playerAnimation.SetInteger("Status", 1);
             }
@@ -535,7 +537,7 @@ namespace NameBattleSystem
             if (player.energy >= ability02.needEnergy && Time.timeScale == 1 && player.isHitRecovery == false && control.isCatching == false && motionStop == false)
             {
                 player.hitRecoveryTime = player.abilityStartHitRecoveryTime + player.abilityEndHitRecoveryTime;
-                player.hitRecoveryTimeMax = player.hitRecoveryTime;
+                player.hitRecoveryTimeMax = player.abilityStartHitRecoveryTime + player.abilityEndHitRecoveryTime;
                 player.isHitRecovery = true;
                 playerAnimation.SetInteger("Status", 2);
                 Invoke("playerAbility015", 0.9f - 0.1f);
@@ -691,9 +693,9 @@ namespace NameBattleSystem
 
         IEnumerator ParryTimeCount(pratiti parryer)
         {
-            player.hitRecoveryTime = 5 * ParryTime;
-            player.hitRecoveryTimeMax = player.hitRecoveryTime;
-            player.isHitRecovery = true;
+            parryer.hitRecoveryTime = 0.5f;
+            parryer.hitRecoveryTimeMax = 0.5f;
+            parryer.isHitRecovery = true;
             yield return new WaitForSeconds(ParryTime);
             parryer.isParry = false;
             if (parryer.ParrySuccess == true)
@@ -703,8 +705,8 @@ namespace NameBattleSystem
             else
             {
                 print("盾反失敗");
-                StartCoroutine(NumberChange(player.maxDef * 0.1f, player, "def"));
-                StartCoroutine(NumberChange(player.maxMDef * 0.1f, player, "mDef"));
+                StartCoroutine(NumberChange(parryer.maxDef * 0.1f, parryer, "def"));
+                StartCoroutine(NumberChange(parryer.maxMDef * 0.1f, parryer, "mDef"));
             }
         }
         IEnumerator ParryTimeSlowDown()

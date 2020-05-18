@@ -254,7 +254,6 @@ namespace NameBattleSystem
             {
                 print("Win");
                 isEnd = true;
-                Debug.Log("Cobra改的：結束戰鬥回到地圖");
                 SystemController.Instance.EndBattle(1);
                 //SceneManager.LoadScene("Win");
             }
@@ -262,7 +261,6 @@ namespace NameBattleSystem
             {
                 print("Lose");
                 isEnd = true;
-                Debug.Log("Cobra改的：結束戰鬥回到地圖");
                 SystemController.Instance.EndBattle(0);
                 //SceneManager.LoadScene("Lose");
             }

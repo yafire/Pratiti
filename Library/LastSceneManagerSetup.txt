@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/BattleSystem/BattleSystemScene/Battle.unity
+- path: Assets/BattleSystem/BattleSystemScene/Tutorial.unity
   isLoaded: 1
   isActive: 1

@@ -262,7 +262,6 @@ namespace NameBattleSystem
             {
                 print("Win");
                 isEnd = true;
-                Debug.Log("Cobra改的：結束戰鬥回到地圖");
                 SystemController.Instance.EndBattle(1);
                 //SceneManager.LoadScene("Win");
             }
@@ -270,7 +269,6 @@ namespace NameBattleSystem
             {
                 print("Lose");
                 isEnd = true;
-                Debug.Log("Cobra改的：結束戰鬥回到地圖");
                 SystemController.Instance.EndBattle(0);
                 //SceneManager.LoadScene("Lose");
             }
@@ -295,7 +293,7 @@ namespace NameBattleSystem
             player.hurtTime -= Time.fixedDeltaTime;
             enemy.hurtTime -= Time.fixedDeltaTime;
 
-            if (playerAnimation.GetCurrentAnimatorStateInfo(0).IsName("feather ability01 hit completely") || playerAnimation.GetCurrentAnimatorStateInfo(0).IsName("feather ability01 miss") || playerAnimation.GetCurrentAnimatorStateInfo(0).IsName("feather ability02") || playerAnimation.GetCurrentAnimatorStateInfo(0).IsName("feather interrupt"))
+            if (playerAnimation.GetCurrentAnimatorStateInfo(0).IsTag("Hit") || playerAnimation.GetCurrentAnimatorStateInfo(0).IsName("feather ability02")) 
             {
                 playerShield.transform.position = Player.transform.position + new Vector3(0.0005f, -0.7457f);
             }
@@ -384,7 +382,7 @@ namespace NameBattleSystem
                     player.hitRecoveryTime = player.attackStartHitRecoveryTime + player.attackCompleteHitRecoveryTime;
                     player.hitRecoveryTimeMax = player.hitRecoveryTime;
                     player.isHitRecovery = true;
-                    playerAnimation.SetInteger("Status", 1);
+                    playerAnimation.SetTrigger("Attack");
                     PressAttackButton.SetActive(true);
                     AttackButton.SetActive(false);
                     StartCoroutine(AttackButtonPress());
@@ -399,7 +397,7 @@ namespace NameBattleSystem
                 player.hitRecoveryTime = player.abilityStartHitRecoveryTime + player.abilityEndHitRecoveryTime;
                 player.hitRecoveryTimeMax = player.hitRecoveryTime;
                 player.isHitRecovery = true;
-                playerAnimation.SetInteger("Status", 2);
+                playerAnimation.SetTrigger("Ability");
                 StartCoroutine(AbilityButtonPress());
                 Invoke("playerAbility015", 0.9f - 0.25f);
                 StartCoroutine(UseStrongAbility(player, enemy, Player, Enemy, ability02));
@@ -511,9 +509,6 @@ namespace NameBattleSystem
             }
             if (player.hitRecoveryTime <= 0 && control.DecideingCatch == false)
             {
-                playerAnimation.SetInteger("Status", 0);
-                playerAnimation.SetBool("Hit completely", false);
-                playerAnimation.SetBool("Hit miss", false);
                 player.isHitRecovery = false;
                 player.hitRecoveryTime = 0;
             }

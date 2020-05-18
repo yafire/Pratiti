@@ -179,9 +179,11 @@ namespace NameBattleSystem
             Time.timeScale = 1f;
 
             // Cobra新增：讀取帕拉提提資料
-            // PratitiBattleData m_EnemyData;
-            player = new pratiti(UData.playerData.atk, UData.playerData.mAtk, UData.playerData.def, UData.playerData.mDef, UData.playerData.agi, UData.playerData.hp, 0, UData.playerData.mDef, UData.playerData.mDef, 1, 1, 0, 0, 1.466f, 1.33f, 1.33f, 0.9f, 0.8f, 0, 0, null, null, null, null, false, false, false, false);
-            enemy = new pratiti(UData.enemyData.atk, UData.enemyData.mAtk, UData.enemyData.def, UData.enemyData.mDef, UData.enemyData.agi, UData.enemyData.hp, 0, UData.enemyData.mDef, UData.enemyData.mDef, 1, 1, 1, 0, 0.35f, 1.5f,1.5f, 1.2f, 1.5f, 0, 0, null, null, null, null, false, false, false, false);
+            BattleUseData m_battleUseData = GameObject.Find("GameLoop").GetComponent<BattleUseData>();
+            Pratiti Ed = m_battleUseData.EnemyPratiti;
+            Pratiti Pd = m_battleUseData.PlayerPratiti;
+            player = new pratiti(Pd.atk, Pd.mAtk, Pd.def, Pd.mDef, Pd.agi, Pd.hp, 0, Pd.mDef, Pd.mDef, 1, 1, 0, 0, 1.466f, 1.33f, 1.33f, 0.9f, 0.8f, 0, 0, null, null, null, null, false, false, false, false);
+            enemy = new pratiti(Ed.atk, Ed.mAtk, Ed.def, Ed.mDef, Ed.agi, Ed.hp, 0, Ed.mDef, Ed.mDef, 1, 1, 1, 0, 0.35f, 1.5f,1.5f, 1.2f, 1.5f, 0, 0, null, null, null, null, false, false, false, false);
 
             // Y.A你要用時，將上面註解，下面解除註解
             //player = new pratiti(550, 550, 500, 500, 500, 500, 0, 500, 500, 1, 1, 0, 0, 0, 0, 0, 20, null, null, null, null, false, false, false, false);

@@ -24,8 +24,6 @@ namespace NameBattleSystem
              */
         void FixedUpdate()
         {
-            print(isAttacking);
-            print(currentFrame);
             if (Ani.GetCurrentAnimatorStateInfo(0).IsName("Feather Attack") && BattleSystem.LCD <= 0)
             {
                 //若角色開始攻擊則開始進入命中判定
@@ -36,38 +34,38 @@ namespace NameBattleSystem
             {
                 //角色水平位置漸漸回到初始水平位置
                 //this.transform.position -= new Vector3(0.025f * distanceX, 0);
-                Gameobj.transform.position -= new Vector3(0.025f * distanceX, 0);
+                this.transform.position -= new Vector3(0.025f * distanceX, 0);
                 if (isWait)
                 {
                     //若角色已回到初始位置則回到靜止初始狀態
-                    if (distanceX > 0 && Gameobj.transform.position.x <= -distanceX + 0f + position.x)
+                    if (distanceX > 0 && this.transform.position.x <= -4)
                     {
-                        Gameobj.transform.position = new Vector3(-4, gameObject.transform.position.y);
+                        this.transform.position = new Vector3(-4, this.transform.position.y);
                     }
-                    if (distanceX < 0 && Gameobj.transform.position.x >= -distanceX - 0f + position.x)
+                    if (distanceX < 0 && this.transform.position.x >= -4)
                     {
-                        Gameobj.transform.position = new Vector3(-4, gameObject.transform.position.y);
+                        this.transform.position = new Vector3(-4, this.transform.position.y);
                     }
 
-                    if (distanceX > 0 && Gameobj.transform.position.x <= -4 && this.transform.position.y <= -0.5f)
+                    if (distanceX > 0 && this.transform.position.x <= -4 && this.transform.position.y <= -0.5f)
                     {
                         rig2d.constraints = RigidbodyConstraints2D.FreezePositionY;
+                        this.transform.position = new Vector3(-4, -0.5f);
                         isInterrputed = false;
                         isWait = false;
                     }
-                    else if (distanceX < 0 && Gameobj.transform.position.x >= -4 && this.transform.position.y <= -0.5f)
+                    else if (distanceX < 0 && this.transform.position.x >= -4 && this.transform.position.y <= -0.5f)
                     {
                         rig2d.constraints = RigidbodyConstraints2D.FreezePositionY;
+                        this.transform.position = new Vector3(-4, -0.5f);
                         isInterrputed = false;
                         isWait = false;
                     }
                 }
             }
-            else if (Ani.GetCurrentAnimatorStateInfo(0).IsName("Feather Idle"))
+            else if (Ani.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.99f) 
             {
-                print(222);
                 this.transform.position = new Vector3(0, 0);
-                BattleSystem.player.hitRecoveryTime = 0;
             }
             if (currentFrame > 160) //角色攻擊動畫進度超過一般攻擊判定期間
             {
@@ -103,7 +101,6 @@ namespace NameBattleSystem
                     //角色攻擊提前中斷結束，攻擊判定結束
                     isAttacking = false;
                     currentFrame = 1;
-                    Ani.SetTrigger("Hit Interrupt");
                     interrupt();    //呼叫提前中斷攻擊的函式
                     BattleSystem.LCD = BattleSystem.ability01.cd;   //攻擊進入冷卻
                 }
@@ -117,6 +114,7 @@ namespace NameBattleSystem
             position = Gameobj.transform.position;
             distanceX = Gameobj.transform.position.x + 4;
             force = Math.Abs(85 / distanceX);//計算角色跳躍上升力的大小
+            Ani.SetTrigger("Hit Interrupt");
             //規定角色跳躍上升力大小的範圍
             if (force > 30)
             {
@@ -153,7 +151,7 @@ namespace NameBattleSystem
             StartCoroutine(Wait());
             yield return new WaitForFixedUpdate();
             yield return new WaitForFixedUpdate();
-            //this.transform.position = position;
+            this.transform.position = position;
             StopCoroutine("Position");
         }
     }
