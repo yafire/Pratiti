@@ -34,10 +34,17 @@ namespace NameBattleSystem
                 isAttacking = true;
                 //currentFrame++; //計算動畫持續的幀數
             }
-            else if (isInterrputed)  //角色處於提前中斷攻擊狀態，角色開始跳躍回初始位置
+            if (Ani.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.95f && Ani.GetCurrentAnimatorStateInfo(0).IsName("Attack")) //角色攻擊動畫進度超過一般攻擊判定期間
+            {
+                //角色攻擊未命中，攻擊判定結束
+                isAttacking = false;
+                //currentFrame = 1;
+                Ani.SetTrigger("Hit Miss");
+                BattleSystem.LCD = BattleSystem.ability01.cd;   //攻擊進入冷卻
+            }
+            if (isInterrputed)  //角色處於提前中斷攻擊狀態，角色開始跳躍回初始位置
             {
                 //角色水平位置漸漸回到初始水平位置
-                //this.transform.position -= new Vector3(0.025f * distanceX, 0);
                 this.transform.position -= new Vector3(0.025f * distanceX, 0);
                 if (isWait)
                 {
@@ -46,7 +53,7 @@ namespace NameBattleSystem
                     {
                         this.transform.position = new Vector3(-4, this.transform.position.y);
                     }
-                    if (distanceX < 0 && this.transform.position.x >= -4)
+                    else if (distanceX < 0 && this.transform.position.x >= -4)
                     {
                         this.transform.position = new Vector3(-4, this.transform.position.y);
                     }
@@ -67,17 +74,9 @@ namespace NameBattleSystem
                     }
                 }
             }
-            else if (Ani.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.99f) 
+            else if (Ani.GetCurrentAnimatorStateInfo(0).IsName("Hit Interrupt") && Ani.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.99f) 
             {
                 this.transform.position = new Vector3(0, 0);
-            }
-            if (Ani.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.95f && Ani.GetCurrentAnimatorStateInfo(0).IsName("Attack")) //角色攻擊動畫進度超過一般攻擊判定期間
-            {
-                //角色攻擊未命中，攻擊判定結束
-                isAttacking = false;
-                //currentFrame = 1;
-                Ani.SetTrigger("Hit Miss");
-                BattleSystem.LCD = BattleSystem.ability01.cd;   //攻擊進入冷卻
             }
         }
 
@@ -99,7 +98,7 @@ namespace NameBattleSystem
                         Ani.SetTrigger("Hit Complete");
                         BattleSystem.LCD = BattleSystem.ability01.cd;   //攻擊進入冷卻
                     }
-                    else if (Ani.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.9f && currentFrame != 1)   //角色攻擊動畫進度提前於一般攻擊判定期間
+                    else if (Ani.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.9f)   //角色攻擊動畫進度提前於一般攻擊判定期間
                     {
                         print("player attack interrupt");
                         //呼叫攻擊函式

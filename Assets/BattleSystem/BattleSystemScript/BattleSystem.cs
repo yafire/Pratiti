@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -226,6 +227,7 @@ namespace NameBattleSystem
         }
         void Update()
         {
+            print(player.hp);
             if (Input.GetKey(KeyCode.Equals))
             {
                 enemy.hp = 5000;
@@ -311,7 +313,7 @@ namespace NameBattleSystem
                 enemy.hitRecoveryTime = enemy.abilityStartHitRecoveryTime + enemy.abilityEndHitRecoveryTime;
                 enemy.hitRecoveryTimeMax = enemy.hitRecoveryTime;
                 enemy.isHitRecovery = true;
-                enemyAnimation.SetTrigger("ability02 0");
+                enemyAnimation.SetTrigger("Ability");
                 StartCoroutine(UseStrongAbility(enemy, player, Enemy, Player, ability05));
                 EnemyAbilityObj = Instantiate(EnemyAbility, EnemyAbility.transform.position, EnemyAbility.transform.rotation);
             }
@@ -321,7 +323,7 @@ namespace NameBattleSystem
                 enemy.hitRecoveryTime = enemy.attackStartHitRecoveryTime + enemy.attackCompleteHitRecoveryTime;
                 enemy.hitRecoveryTimeMax = enemy.hitRecoveryTime;
                 enemy.isHitRecovery = true;
-                enemyAnimation.SetBool("ability01", true);
+                enemyAnimation.SetTrigger("Attack");
             }
 
             if (player.energy >= ability02.needEnergy)
@@ -516,8 +518,6 @@ namespace NameBattleSystem
             }
             if (enemy.hitRecoveryTime <= 0 && control.DecideingCatch == false)
             {
-                enemyAnimation.SetBool("Hit completely", false);
-                enemyAnimation.SetBool("Hit miss", false);
                 enemy.isHitRecovery = false;
                 enemy.hitRecoveryTime = 0;
             }
@@ -554,7 +554,7 @@ namespace NameBattleSystem
             {
                 defer.mDef = 0;
             }
-            chance = Random.Range(1, 101);
+            chance = UnityEngine.Random.Range(1, 101);
 
             if ((chance + defer.agi - atker.agi) <= ability.hitRate)
             {
@@ -568,10 +568,10 @@ namespace NameBattleSystem
                     Damage = 0.0005f * ability.power * 0.1f * (atker.atk + atker.mAtk);
                     StartCoroutine(NumberChange(Damage, defer, "hp"));
                     StartCoroutine(NumberChange(ability.gainEnergy, atker, "gainEnergy"));
-                    Damage = (int)Damage;
+                    Damage = (float)Math.Ceiling((double)Damage);
                     damage.GetComponentInChildren<Text>().text = "-" + Damage.ToString();
-                    random01 = Random.Range(-3, 5);
-                    random02 = Random.Range(3, 6);
+                    random01 = UnityEngine.Random.Range(-3, 5);
+                    random02 = UnityEngine.Random.Range(3, 6);
                     Instantiate(damage, defer.gameObj01.transform.position + new Vector3(random01 * 0.2f, random02 * 0.2f), new Quaternion(0, 0, 0, 0));
                     defer.gameObj01.GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
                     defer.gameObj02.GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
@@ -592,10 +592,10 @@ namespace NameBattleSystem
                     }
                     Damage = 0.0005f * ability.power * (atker.atk + atker.mAtk);
                     StartCoroutine(NumberChange(Damage, atker, "hp"));
-                    Damage = (int)Damage;
+                    Damage = (float)Math.Ceiling((double)Damage);
                     damage.GetComponentInChildren<Text>().text = "-" + Damage.ToString();
-                    random01 = Random.Range(-3, 5);
-                    random02 = Random.Range(3, 6);
+                    random01 = UnityEngine.Random.Range(-3, 5);
+                    random02 = UnityEngine.Random.Range(3, 6);
                     Instantiate(damage, atker.gameObj01.transform.position + new Vector3(random01 * 0.2f, random02 * 0.2f), new Quaternion(0, 0, 0, 0));
                     //Instantiate(damage, new Vector3(-3.1f,3.1f), new Quaternion(0, 0, 0, 0));
                     //Instantiate(damage, new Vector3(3.1f, 2.9f), new Quaternion(0, 0, 0, 0));
@@ -610,7 +610,7 @@ namespace NameBattleSystem
                     //傷害值計算                                                                  //90%是滿減傷
                     Damage = 0.0005f * ability.power * (atker.atk + atker.mAtk - defer.defStatus * 0.9f *
                              (atker.atk * defer.def / defer.maxDef + atker.mAtk * defer.mDef / defer.maxMDef));
-                    Damage = (int)Damage;
+                    Damage = (float)Math.Ceiling((double)Damage);
 
                     //呼叫各數值遞減的協程函式
                     StartCoroutine(NumberChange(Damage, defer, "hp"));
@@ -619,8 +619,8 @@ namespace NameBattleSystem
                     StartCoroutine(NumberChange(ability.gainEnergy, atker, "gainEnergy"));
 
                     //產生顯示傷害數值位置的偏移亂數
-                    random01 = Random.Range(-3, 5);
-                    random02 = Random.Range(3, 6);
+                    random01 = UnityEngine.Random.Range(-3, 5);
+                    random02 = UnityEngine.Random.Range(3, 6);
                     damage.GetComponentInChildren<Text>().text = "-" + Damage.ToString(); //將傷害數值文字化
                     //在畫面上產生傷害數值
                     Instantiate(damage, defer.gameObj01.transform.position + new Vector3(random01 * 0.2f, random02 * 0.2f), new Quaternion(0, 0, 0, 0));
@@ -651,8 +651,8 @@ namespace NameBattleSystem
                 {
                     defer.ParrySuccess = true;
                 }
-                random01 = Random.Range(-4, 5);
-                random02 = Random.Range(1, 6);
+                random01 = UnityEngine.Random.Range(-4, 5);
+                random02 = UnityEngine.Random.Range(1, 6);
                 Instantiate(miss, defer.gameObj01.transform.position + new Vector3(random01 * 0.3f, random02 * 0.3f), new Quaternion(0, 0, 0, 0));
             }
         }
@@ -765,7 +765,7 @@ namespace NameBattleSystem
             switch (DataType)
             {
                 case "hp":
-                    Pratiti.hp -= (int)Number;
+                    Pratiti.hp -= 1;
                     break;
                 case "def":
                     Pratiti.def -= Number;

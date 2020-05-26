@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 namespace NameBattleSystem
@@ -15,49 +16,43 @@ namespace NameBattleSystem
         public bool isWait = false;
         public float distanceX;
         public float timer;
-        public float ti;
         public float force;
         public Vector3 position;
         void FixedUpdate()
         {
-            if (Ani.GetCurrentAnimatorStateInfo(0).IsName("pig ability01") && BattleSystem.RCD01 <= 0)
+            //print(Ani.GetCurrentAnimatorStateInfo(0).normalizedTime);
+            if (Ani.GetCurrentAnimatorStateInfo(0).IsName("Attack") && BattleSystem.RCD01 <= 0)
             {
-                currentFrame++;
+                //currentFrame++;
                 isAttacking = true;
             }
-            else if (Ani.GetCurrentAnimatorStateInfo(0).IsName("pig ability01 hit completely") || Ani.GetCurrentAnimatorStateInfo(0).IsName("pig idle"))
+            if (Ani.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.3f && Ani.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
             {
-                isAttacking = false;
-                currentFrame = 1;
-            }
-            if (currentFrame > 41 && Ani.GetBool("Hit completely") != true)
-            {
-                Ani.SetBool("Hit miss", true);
-                currentFrame = 1;
+                Ani.SetTrigger("Hit Miss");
+                //currentFrame = 1;
                 isAttacking = false;
                 BattleSystem.RCD01 = BattleSystem.ability04.cd;
-                StartCoroutine(CancelAbility01());
             }
-            if (isInterrputed)
+            if (isInterrputed)//角色處於提前中斷攻擊狀態，角色開始跳躍回初始位置
             {
-                ti += Time.fixedDeltaTime;
+                //角色水平位置漸漸回到初始水平位置
                 this.transform.position -= new Vector3(0.025f * distanceX, 0);
                 if (isWait)
                 {
-                    if (distanceX > 0 && this.transform.position.x <= -distanceX + 0f + position.x)
+                    if (distanceX > 0 && this.transform.position.x <= 4)
                     {
                         this.transform.position = new Vector3(4, this.transform.position.y);
                     }
-                    if (distanceX < 0 && this.transform.position.x >= -distanceX - 0f + position.x)
+                    else if (distanceX < 0 && this.transform.position.x >= 4) 
                     {
                         this.transform.position = new Vector3(4, this.transform.position.y);
                     }
+
                     if (distanceX > 0 && this.transform.position.x <= 4 && this.transform.position.y <= -0.5f)
                     {
                         rig2d.constraints = RigidbodyConstraints2D.FreezePositionY;
                         isInterrputed = false;
                         isWait = false;
-                        Ani.SetBool("Hit interrupt", false);
                         this.transform.position = new Vector3(4, -1);
                     }
                     else if (distanceX < 0 && this.transform.position.x >= 4 && this.transform.position.y <= -0.5f)
@@ -65,12 +60,11 @@ namespace NameBattleSystem
                         rig2d.constraints = RigidbodyConstraints2D.FreezePositionY;
                         isInterrputed = false;
                         isWait = false;
-                        Ani.SetBool("Hit interrupt", false);
                         this.transform.position = new Vector3(4, -1);
                     }
                 }
             }
-            else if (Ani.GetCurrentAnimatorStateInfo(0).IsName("pig interrupt") && Ani.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.99f)
+            else if (Ani.GetCurrentAnimatorStateInfo(0).IsName("Hit Interrupt") && Ani.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.99f)
             {
                 this.transform.position = new Vector3(0, 0);
                 BattleSystem.enemy.hitRecoveryTime = 0;
@@ -80,37 +74,38 @@ namespace NameBattleSystem
         {
             if (collider.gameObject.tag == "BattlePratiti" && isAttacking == true)
             {
-                if (currentFrame >= 33 && currentFrame <= 41)
+                if (Ani.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.18f && Ani.GetCurrentAnimatorStateInfo(0).normalizedTime <= 0.3f)
                 {
                     print("enemycomplete");
                     GameObject.Find("battle").GetComponent<BattleSystem>().attack(BattleSystem.enemy, BattleSystem.player, BattleSystem.ability04);
-                    Ani.SetBool("Hit completely", true);
-                    BattleSystem.RCD01 = BattleSystem.ability04.cd;
-                    currentFrame = 1;
+                    //角色攻擊完整地結束，攻擊判定結束
+                    //currentFrame = 1;
                     isAttacking = false;
-                    StartCoroutine(CancelAbility01());
+                    Ani.SetTrigger("Hit Complete");
+                    BattleSystem.RCD01 = BattleSystem.ability04.cd;
+
                 }
-                else if (currentFrame < 33 && currentFrame != 1)
+                else if (Ani.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.18f) 
                 {
                     print("enemyinterrupt");
                     GameObject.Find("battle").GetComponent<BattleSystem>().attack(BattleSystem.enemy, BattleSystem.player, BattleSystem.ability04); ;
-                    BattleSystem.RCD01 = BattleSystem.ability04.cd;
-                    currentFrame = 1;
+                    //currentFrame = 1;
                     isAttacking = false;
-                    StartCoroutine(CancelAbility01());
-                    interrupt();
+                    interrupt();    //呼叫提前中斷攻擊的函式
+                    BattleSystem.RCD01 = BattleSystem.ability04.cd;   //攻擊進入冷卻
                 }
             }
         }
-        public void interrupt()
+        public void interrupt() //提前中斷攻擊函式
         {
+            //角色處於提前中斷攻擊狀態
+            isInterrputed = true;
+            //宣告角色碰撞時的座標以及與角色初始位置的水平距離
             position = Gameobj.transform.position;
             distanceX = Gameobj.transform.position.x - 4;
-            force = 85 / distanceX;
-            if (force < 0)
-            {
-                force = -force;
-            }
+            force = Math.Abs(85 / distanceX);//計算角色跳躍上升力的大小
+            Ani.SetTrigger("Hit Interrupt");
+            //規定角色跳躍上升力大小的範圍
             if (force > 30)
             {
                 force = 30;
@@ -119,21 +114,18 @@ namespace NameBattleSystem
             {
                 force = 25;
             }
-            isInterrputed = true;
+
+            //給予角色遊戲物件物理跳躍上升力
             rig2d.constraints = RigidbodyConstraints2D.None;
             rig2d.AddForce(new Vector2(0, force), ForceMode2D.Impulse);
-            Ani.SetBool("Hit interrupt", true);
-            StartCoroutine(Position());
-            print("敵人上升力為"+force);
-            BattleSystem.enemy.hitRecoveryTimeMax = 0.5f;
-            BattleSystem.enemy.hitRecoveryTime = 0.5f;
-        }
-        private IEnumerator CancelAbility01()
-        {
-            yield return new WaitForSecondsRealtime(0.03f);
-            Ani.SetBool("ability01", false);
-            StopCoroutine("CancelAbility01");
 
+            StartCoroutine(Position());
+
+            print("敵人上升力為"+force);
+
+            //角色進入硬直時間
+            BattleSystem.player.hitRecoveryTimeMax = 0.95f;
+            BattleSystem.player.hitRecoveryTime = 0.95f;
         }
         IEnumerator Wait()
         {
