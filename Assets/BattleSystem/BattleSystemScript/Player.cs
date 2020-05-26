@@ -18,17 +18,21 @@ namespace NameBattleSystem
         public float force;
         public Vector3 position;
 
-            /*1.65f
-             2.3f
-             3.5f
-             */
+        /*1.65f
+         2.3f
+         3.5f
+         */
+        void Update()
+        {
+        }
         void FixedUpdate()
         {
-            if (Ani.GetCurrentAnimatorStateInfo(0).IsName("Feather Attack") && BattleSystem.LCD <= 0)
+            //print(Ani.GetCurrentAnimatorStateInfo(0).normalizedTime);
+            if (Ani.GetCurrentAnimatorStateInfo(0).IsName("Attack") && BattleSystem.LCD <= 0)
             {
                 //若角色開始攻擊則開始進入命中判定
                 isAttacking = true;
-                currentFrame++; //計算動畫持續的幀數
+                //currentFrame++; //計算動畫持續的幀數
             }
             else if (isInterrputed)  //角色處於提前中斷攻擊狀態，角色開始跳躍回初始位置
             {
@@ -67,11 +71,11 @@ namespace NameBattleSystem
             {
                 this.transform.position = new Vector3(0, 0);
             }
-            if (currentFrame > 160) //角色攻擊動畫進度超過一般攻擊判定期間
+            if (Ani.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.95f && Ani.GetCurrentAnimatorStateInfo(0).IsName("Attack")) //角色攻擊動畫進度超過一般攻擊判定期間
             {
                 //角色攻擊未命中，攻擊判定結束
                 isAttacking = false;
-                currentFrame = 1;
+                //currentFrame = 1;
                 Ani.SetTrigger("Hit Miss");
                 BattleSystem.LCD = BattleSystem.ability01.cd;   //攻擊進入冷卻
             }
@@ -79,30 +83,33 @@ namespace NameBattleSystem
 
         public void OnTriggerStay2D(Collider2D collider)    //角色與角色的碰撞函式
         {
-            if (collider.gameObject.tag == "BattlePratiti" && isAttacking == true) //撞擊對象為敵人且處於攻擊判定
+            if (Ani.GetCurrentAnimatorStateInfo(0).IsName("Attack")) 
             {
-                print(currentFrame);
-                if (currentFrame >= 156 && currentFrame <= 160) //角色攻擊動畫進度處於一般攻擊判定期間
+                if (collider.gameObject.tag == "BattlePratiti" && isAttacking == true) //撞擊對象為敵人且處於攻擊判定
                 {
-                    print("player attack complete");
-                    //呼叫攻擊函式
-                    GameObject.Find("battle").GetComponent<BattleSystem>().attack(BattleSystem.player, BattleSystem.enemy, BattleSystem.ability01);
-                    //角色攻擊完整地結束，攻擊判定結束
-                    isAttacking = false;
-                    currentFrame = 1;
-                    Ani.SetTrigger("Hit Complete");
-                    BattleSystem.LCD = BattleSystem.ability01.cd;   //攻擊進入冷卻
-                }
-                else if (currentFrame < 156 && currentFrame != 1)   //角色攻擊動畫進度提前於一般攻擊判定期間
-                {
-                    print("player attack interrupt");
-                    //呼叫攻擊函式
-                    GameObject.Find("battle").GetComponent<BattleSystem>().attack(BattleSystem.player, BattleSystem.enemy, BattleSystem.ability01);
-                    //角色攻擊提前中斷結束，攻擊判定結束
-                    isAttacking = false;
-                    currentFrame = 1;
-                    interrupt();    //呼叫提前中斷攻擊的函式
-                    BattleSystem.LCD = BattleSystem.ability01.cd;   //攻擊進入冷卻
+                    //print(currentFrame);
+                    if (Ani.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f && Ani.GetCurrentAnimatorStateInfo(0).normalizedTime <= 0.95f) //角色攻擊動畫進度處於一般攻擊判定期間
+                    {
+                        print("player attack complete");
+                        //呼叫攻擊函式
+                        GameObject.Find("battle").GetComponent<BattleSystem>().attack(BattleSystem.player, BattleSystem.enemy, BattleSystem.ability01);
+                        //角色攻擊完整地結束，攻擊判定結束
+                        isAttacking = false;
+                        //currentFrame = 1;
+                        Ani.SetTrigger("Hit Complete");
+                        BattleSystem.LCD = BattleSystem.ability01.cd;   //攻擊進入冷卻
+                    }
+                    else if (Ani.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.9f && currentFrame != 1)   //角色攻擊動畫進度提前於一般攻擊判定期間
+                    {
+                        print("player attack interrupt");
+                        //呼叫攻擊函式
+                        GameObject.Find("battle").GetComponent<BattleSystem>().attack(BattleSystem.player, BattleSystem.enemy, BattleSystem.ability01);
+                        //角色攻擊提前中斷結束，攻擊判定結束
+                        isAttacking = false;
+                        //currentFrame = 1;
+                        interrupt();    //呼叫提前中斷攻擊的函式
+                        BattleSystem.LCD = BattleSystem.ability01.cd;   //攻擊進入冷卻
+                    }
                 }
             }
         }
@@ -133,8 +140,8 @@ namespace NameBattleSystem
             StartCoroutine(Position());
 
             //角色進入硬直時間
-            BattleSystem.player.hitRecoveryTime = 0.95f;
             BattleSystem.player.hitRecoveryTimeMax = 0.95f;
+            BattleSystem.player.hitRecoveryTime = 0.95f;
         }
         IEnumerator Wait()
         {
