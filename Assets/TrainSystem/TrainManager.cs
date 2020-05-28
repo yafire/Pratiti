@@ -16,7 +16,7 @@ namespace TrainSystem{
 
 		//在trainmenu上顯示能力值
 		public Text pratitiNameText,sexText,characteristicText;
-		public TextMeshProUGUI hpText,atkText,defText,mAtkText,mDefText,agiText;
+		public Text hpText,atkText,defText,mAtkText,mDefText,agiText;
 
 		public Image pressureMaskImage;
 		public Image nowWatch;    //頭貼顯示處
@@ -66,7 +66,7 @@ namespace TrainSystem{
 			{
 					if (i < pratitiData.Count)
 					{
-						pratitiSlotGrid.transform.GetChild(i).transform.GetChild(0).gameObject.GetComponent<Image>().sprite = pratitiData[i].PratitiSprite();
+						pratitiSlotGrid.transform.GetChild(i).transform.GetChild(0).gameObject.GetComponent<Image>().sprite = pratitiData[i].GetPratitiSprite();
 
 						//顯示帕拉緹緹的名字與性別
 						if (pratitiData[i].sex)		
@@ -98,7 +98,7 @@ namespace TrainSystem{
 			sexText.text = (pratiti.sex) ? "♂" : "♀" ;
 			pressureMaskImage.rectTransform.sizeDelta = new Vector2(240.0f* pratiti.pressure/maxPressure,50.0f);//改變Mask物件的寬度達成pressure槽減少的效果
 			characteristicText.text= pratiti.characteristic.ToString();
-			nowWatch.GetComponent<Image>().sprite= pratiti.PratitiSprite();
+			nowWatch.GetComponent<Image>().sprite= pratiti.GetPratitiSprite();
 		}
 
 		public void RefreshInfoPanel(Pratiti sD)

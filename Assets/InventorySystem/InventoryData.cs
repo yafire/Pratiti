@@ -6,15 +6,23 @@ using Newtonsoft.Json;
 
 namespace InventorySystem
 {
+    [System.Serializable]
     public class InventoryData : MonoBehaviour
     {
         static InventoryData instance;
+        public static List<Item> ingredientInventory;
+        public  List<Item> ShowIngredientInventory;
+        
+        public static List<Item> dessertInventory;
+        public List<Item> ShowDessertInventory;
+        
+        public static List<Item> otherInventory;
+        public  List<Item> ShowOtherInventory;
 
-        private static List<Item> ingredientInventory;
-        private static List<Item> dessertInventory;
-        private static List<Item> otherInventory;
 
-        private static CookBook myCookBook; 
+        //public Dictionary<string,int> inventory;
+        private static CookBook myCookBook;
+        
 
         public void Awake()
         {
@@ -26,39 +34,63 @@ namespace InventorySystem
             otherInventory = new List<Item>();
             myCookBook = new CookBook();
 
-            AddItem(new Item { itemName = Item.ItemName.雞蛋 , quantity = 2 });
-            AddItem(new Item { itemName = Item.ItemName.巧克力, quantity = 1 });
-            AddItem(new Item { itemName = Item.ItemName.牛奶, quantity = 2 });
-
             List<Item> recipe = new List<Item>();
 
-            Recipe cake ;
+            Debug.Log("待解決bug：");
+            AddItem(new Item { itemName = Item.ItemName.糖, quantity = 0 });
+            AddItem(new Item { itemName = Item.ItemName.雞蛋, quantity = 0 });
+            AddItem(new Item { itemName = Item.ItemName.布丁, quantity = 0 });
+            //AddItem(new Item { itemName = Item.ItemName.糖, quantity = 3 });
+
             myCookBook.GetCookBook().Add(
-                Item.ItemName.巧克力蛋糕, cake = new Recipe(
+                Item.ItemName.布丁, new Recipe(
                     new Item { itemName = Item.ItemName.雞蛋, quantity = 1 },
-                    new Item { itemName = Item.ItemName.巧克力, quantity = 1 },
-                    new Item { itemName = Item.ItemName.牛奶, quantity = 1 }, recipe)
+                    new Item { itemName = Item.ItemName.糖, quantity = 1 }, recipe)
             );
         }
 
+
+        private void ShowItem()
+        {
+            ShowIngredientInventory = ingredientInventory;
+            ShowDessertInventory = dessertInventory;
+            ShowOtherInventory = otherInventory;
+        }
+
+
         public void AddItem(Item item)
         {
+            // 甜點增加
+
             bool itemExist = false;
 
             foreach (Item iL in GetInventory(item))
             {
+                Debug.Log("判斷甜點數" + item.itemName + item.quantity);
                 if (item.itemName == iL.itemName)
                 {
                     itemExist = true;
-                    iL.quantity += item.quantity;
+                    Debug.Log("甜點數增加" + item.itemName + item.quantity);
+                    Item.ItemName iN = item.itemName;
+                    FindItem(new Item(iN, 0)).quantity += item.quantity ;
+                    //FindItem(item).quantity += item.quantity;
+                    //iL.quantity += item.quantity;
+                    Debug.Log("引入的ithem甜點數變成" + item.itemName + item.quantity);
+                    Debug.Log("甜點數變成" + iL.itemName + iL.quantity);
                 }
             }
 
             if (!itemExist)
             {
+                Debug.Log("甜點" + item.itemName + item.quantity);
                 GetInventory(item).Add(item);
             }
+
+            // 顯示目前甜點
+            ShowItem();
         }
+
+
 
         public void RemoveItem(Item item)
         {

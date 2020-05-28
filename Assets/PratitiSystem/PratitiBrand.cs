@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PratitiBrand
-{   
+{
     public static PratitiBrand feather = new PratitiBrand(PratitiBrand.PratitiName.羽毛, 1.1f, 1.1f, 1f, 1f, 1f, 1f, 60);
     public static PratitiBrand pig = new PratitiBrand(PratitiBrand.PratitiName.山豬, 1.1f, 1.1f, 1.1f, 1f, 1f, 1f, 40);
 
@@ -26,7 +26,7 @@ public class PratitiBrand
         雲朵
     }
 
-    public PratitiBrand(PratitiName pratitiName,float atkBuff, float matkBuff, float defBuff, float mdefBuff, float hpBuff, float agiBuff,int sexCoefficient) 
+    public PratitiBrand(PratitiName pratitiName, float atkBuff, float matkBuff, float defBuff, float mdefBuff, float hpBuff, float agiBuff, int sexCoefficient)
     {
         this.pratitiName = pratitiName;
         this.atkBuff = atkBuff;
@@ -36,5 +36,36 @@ public class PratitiBrand
         this.hpBuff = hpBuff;
         this.agiBuff = agiBuff;
         this.sexCoefficient = sexCoefficient;
+    }
+
+    public static PratitiBrand GetPratitiBrand(string brandName)
+    {
+        switch (brandName)
+        {
+            case "pig":
+                return pig;
+            case "feather":
+                return feather;
+
+            default:
+                break;
+        }
+
+        return null;
+    }
+    public static PratitiBrand GetPratitiBrand(PratitiName brandName)
+    {
+        switch (brandName)
+        {
+            case PratitiName.羽毛:
+                return new PratitiBrand(PratitiBrand.PratitiName.羽毛, 1.1f, 1.1f, 1f, 1f, 1f, 1f, 60);
+            case PratitiName.山豬:
+                return new PratitiBrand(PratitiBrand.PratitiName.山豬, 1.1f, 1.1f, 1.1f, 1f, 1f, 1f, 40);
+
+            default:
+                break;
+        }
+
+        return null;
     }
 }

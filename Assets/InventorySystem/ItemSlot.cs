@@ -11,15 +11,15 @@ namespace InventorySystem
     {
         public Item thisItem;
         private Image itemImage;
-        private TextMeshProUGUI itemName;
-        private TextMeshProUGUI itemQuantity;
+        private Text itemName;
+        private Text itemQuantity;
         
         // Start is called before the first frame update
         void Start()
         {
             itemImage = this.transform.GetChild(0).GetComponent<Image>();
-            itemQuantity = this.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
-            itemName = this.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
+            itemQuantity = this.transform.GetChild(1).GetComponent<Text>();
+            itemName = this.transform.GetChild(2).GetComponent<Text>();
             itemImage.sprite = thisItem.ItemSprite(thisItem);
             itemQuantity.text = thisItem.quantity.ToString();
             itemName.text = thisItem.itemName.ToString();

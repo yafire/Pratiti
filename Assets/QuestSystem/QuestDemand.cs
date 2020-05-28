@@ -33,6 +33,15 @@ namespace QuestSystem
             this.flags = null;
         }
 
+        public QuestDemand(Item item1 , Item item2 )
+        {
+            this.item1 = item1;
+            this.item2 = item2;
+            this.items.Add(item1);
+            this.items.Add(item2);
+            this.flags = null;
+        }
+
         public QuestDemand(Item item1)
         {
             this.item1 = item1;

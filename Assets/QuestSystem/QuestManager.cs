@@ -29,7 +29,7 @@ namespace QuestSystem
                 Destroy(this);
             instance = this;
 
-            questData = GameObject.Find("GameData").GetComponent<QuestData>();
+            questData = GameObject.Find("QuestData").GetComponent<QuestData>();
             Debug.Log(questData);
             questList = questData.GetQuestList();
         }
@@ -39,7 +39,20 @@ namespace QuestSystem
             Debug.Log("???");
             this.gameObject.transform.parent.gameObject.SetActive(true);
             questData.CheckAcceptedQuest();
-            RefreshQuestPanel();
+
+            if(questData.GetCurrentQuest() == null)
+            {
+                Debug.Log("questData.GetCurrentQuest() == null)");
+                questSlot.transform.GetChild(0).gameObject.GetComponent<Text>().text = "";
+                questSlot.transform.GetChild(1).gameObject.GetComponent<Text>().text = "";
+                Destroy(questEventSlotGrid.transform);
+            }
+            else
+            {
+                RefreshQuestPanel();
+            }
+
+
         }
 
         public void Escape()

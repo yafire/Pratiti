@@ -30,40 +30,42 @@ namespace QuestSystem
             boolCheck = new Dictionary<string , List<bool>>();
             questList = new List<Quest>();
 
-            CreatFirstQuest();
-
-            FindQuest(firstQuest).questStatus = Quest.QuestStatus.accepted;
-
+            CreatM1_puddin();
             OKButton.GetComponent<Button>().interactable = false;
         }
 
-        void CreatFirstQuest()
+
+        #region 第一個任務
+
+        void CreatM1_puddin()
         {
-            string aString = "Hi,\nthis is the discribetion of the 1st Quest";
+            string aString = "給雪拉布丁";
             firstQuest = new Quest(Quest.QuestName.firstQuest , aString);
 
-            QuestEvent a = new QuestEvent("event1" , "Info1" , null);
-            a.questDemand = new QuestDemand(new Item { itemName = Item.ItemName.巧克力蛋糕 , quantity = 1 });
-            itemCheck.Add(a.GetID(), a.questDemand.items);
-            firstQuest.AddQuestEvent(a);
 
-            QuestEvent b = new QuestEvent("event2", "Info2", null);
-            b.questDemand = new QuestDemand(false);
-            boolCheck.Add(b.GetID(), b.questDemand.flags);
-            firstQuest.AddQuestEvent(b);
+            QuestEvent m1_1 = new QuestEvent("去村子找甜點屋老闆", "nani", null);
+            m1_1.questDemand = new QuestDemand(false);
+            boolCheck.Add(m1_1.GetID(), m1_1.questDemand.flags);
+            firstQuest.AddQuestEvent(m1_1);
 
-            QuestEvent c = new QuestEvent("event3", "Info3", null);
-            c.questReward = new QuestReward(new Item { itemName = Item.ItemName.快樂草, quantity = 1 } , false);
-            firstQuest.AddQuestEvent(c);
+            QuestEvent m1_2 = new QuestEvent("蒐集3個砂糖、3個雞蛋", "" , null);
+            m1_2.questDemand = new QuestDemand(
+                new Item { itemName = Item.ItemName.糖 , quantity = 3 },
+                new Item { itemName = Item.ItemName.雞蛋, quantity = 3 });
+            itemCheck.Add(m1_2.GetID(), m1_2.questDemand.items);
+            firstQuest.AddQuestEvent(m1_2);
 
-            firstQuest.questReward = c.questReward;
+            QuestEvent m1_3 = new QuestEvent("回去村子找甜點屋老闆", "", null);
+            m1_3.questDemand = new QuestDemand(false);
+            boolCheck.Add(m1_3.GetID(), m1_3.questDemand.flags);
+            firstQuest.AddQuestEvent(m1_3);
 
             firstQuest.QuestEventLinkerAndMarker();
 
             /*firstQuest.AddPath(a.GetID() , b.GetID());
             firstQuest.AddPath(b.GetID() , c.GetID());*/
 
-            firstQuest.BFS(a);
+            firstQuest.BFS(m1_1);
             //firstQuest.PrintPath();
 
             questList.Add(firstQuest);
@@ -83,10 +85,6 @@ namespace QuestSystem
                         {
                             Debug.Log(FindQuest(firstQuest));
                             Debug.Log(FindQuest(firstQuest).GetCurrentEvent());
-                            foreach ( Item item in itemCheck[ FindQuest(firstQuest).GetCurrentEvent().GetID() ] ) 
-                            {
-                                inventoryData.RemoveItem(item);
-                            }
                             FindQuest(firstQuest).GetCurrentEvent().UpDateQuestEvent(QuestEvent.EventStatus.done);
                             questManager.GetComponent<QuestManager>().Initialize();
                             OKButton.GetComponent<Button>().onClick.RemoveAllListeners();
@@ -116,34 +114,11 @@ namespace QuestSystem
                             questManager.GetComponent<QuestManager>().Initialize();
                             OKButton.GetComponent<Button>().onClick.RemoveAllListeners();
                             OKButton.GetComponent<Button>().interactable = false;
+                            // 第二個事件寫在這
                         });
                     }
                     break;
 
-                case 3:
-                    OKButton.GetComponent<Button>().interactable = true;
-                    OKButton.GetComponent<Button>().onClick.AddListener(delegate ()
-                    {
-                        foreach (Item item in FindQuest(firstQuest).questReward.items)
-                        {
-                            inventoryData.AddItem(item);
-                        }
-
-                        int n = 0;
-                        do
-                        {
-                            FindQuest(firstQuest).questReward.flags[n] = true;
-                            n++;
-                        } while (n < FindQuest(firstQuest).questReward.flags.Count);
-
-                        Debug.Log("third event done");
-                        FindQuest(firstQuest).GetCurrentEvent().UpDateQuestEvent(QuestEvent.EventStatus.done);
-                        questManager.GetComponent<QuestManager>().Initialize();
-                        OKButton.GetComponent<Button>().onClick.RemoveAllListeners();
-                        OKButton.GetComponent<Button>().interactable = false;
-                        
-                    });
-                    break;
 
                 default:
                     Debug.Log("default");
@@ -152,6 +127,35 @@ namespace QuestSystem
 
             Debug.Log("current" + FindQuest(firstQuest).GetCurrentEvent().eventName);
         }
+
+        public void FindBoss()
+        {
+            boolCheck[FindQuest(firstQuest).questEvents[0].GetID()][0] = true;
+            Debug.Log(boolCheck[FindQuest(firstQuest).questEvents[0].GetID()][0]);
+        }
+
+        public void FindBoss2()
+        {
+            boolCheck[FindQuest(firstQuest).questEvents[2].GetID()][0] = true;
+            Debug.Log(boolCheck[FindQuest(firstQuest).questEvents[2].GetID()][0]);
+        }
+
+        public void GetFirstQuest()
+        {
+            firstQuest.questStatus = Quest.QuestStatus.accepted;
+        }
+
+        /*
+        public void FirstMissionStory()
+        {
+            // SystemController.Instance.PlayBlock("S", "M1_2");
+        }
+
+    */
+        #endregion
+
+
+        #region 共同方法
 
         public void CheckAcceptedQuest()
         {
@@ -186,6 +190,8 @@ namespace QuestSystem
                         isEnough = true;
                     if (iC.itemName == item.itemName && iC.quantity != item.quantity)
                         isEnough = false;
+                    Debug.Log("need"+iC.quantity);
+                    Debug.Log("have"+item.quantity+item.itemName.ToString());
                 }
                 if (inventoryData.FindItem(iC) == null)
                     isEnough = false;
@@ -221,7 +227,7 @@ namespace QuestSystem
                     return quest;
             }
             Debug.Log("error");
-            return null; ;
+            return null; 
         }
 
         public Quest FindQuest(QuestEvent questEvent)   //透過事件搜索
@@ -232,7 +238,7 @@ namespace QuestSystem
                     return quest;
             }
             Debug.Log("error");
-            return null; ;
+            return null; 
         }
 
         public Quest GetAcceptedQuest()
@@ -244,17 +250,25 @@ namespace QuestSystem
             }
             Debug.Log("no accepted");
             return null;
-        }
+        } 
+
+
 
         public List<Quest> GetQuestList()
         {
             return questList;
         }
 
-        public void Changebc()
+        public Quest GetCurrentQuest()
         {
-            boolCheck[FindQuest(firstQuest).questEvents[1].GetID()][0] = true;
-            Debug.Log(boolCheck[FindQuest(firstQuest).questEvents[1].GetID()][0]);
+            foreach (Quest quest in questList)
+            {
+                if (quest.questStatus == Quest.QuestStatus.accepted)
+                    return quest;
+            }
+            return null;
         }
-    }    
+
+        #endregion
+    }
 }
