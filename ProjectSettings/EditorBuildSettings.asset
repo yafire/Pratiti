@@ -8,12 +8,18 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameTitle.unity
     guid: 4c6fee6f5e821f44aaa132d92d2401ec
-  - enabled: 1
-    path: Assets/Scenes/EdwinHouse.unity
-    guid: f40bcca04957e44588419f0b487bc4a8
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
     path: Assets/Scenes/Map.unity
-    guid: cb092b842770c430c87a877cc2917ea9
+    guid: 405215f1f5f4048438f6b75e433bd560
+  - enabled: 1
+    path: Assets/Scenes/EndBattle.unity
+    guid: c31071a6468ec474b923bbacd08fa3df
   - enabled: 1
     path: Assets/Scenes/TrainSystem.unity
     guid: e9f821814fecccc42bc3b658e784df9d

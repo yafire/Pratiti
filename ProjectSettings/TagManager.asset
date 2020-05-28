@@ -13,6 +13,8 @@ TagManager:
   - Palyer
   - Ground
   - Boss
+  - BattlePratiti
+  - StoryPicture
   layers:
   - Default
   - TransparentFX
@@ -55,6 +57,9 @@ TagManager:
     locked: 0
   - name: platform
     uniqueID: 3994704319
+    locked: 0
+  - name: item
+    uniqueID: 2118567687
     locked: 0
   - name: character
     uniqueID: 2646269275
