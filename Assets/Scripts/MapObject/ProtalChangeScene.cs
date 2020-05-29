@@ -41,23 +41,6 @@ public class ProtalChangeScene : MonoBehaviour
     }
 
 
-    // 執行Block
-    void PlayBlock(string targetBlockName)
-    {
-        // 尋找Block
-        Block targetBlock = FungusMap.FindBlock(targetBlockName);
-        // 當targetBlock有物件時執行Block
-        if (targetBlock != null)
-        {
-            FungusMap.ExecuteBlock(targetBlock);
-        }
-        else
-        {
-            Debug.LogError("找不到在" + FungusMap.name + "裡的" + targetBlockName + "Block");
-        }
-
-    }
-
     // 靠夠近，進行傳送
     private void OnTriggerEnter2D(Collider2D co)
     {
