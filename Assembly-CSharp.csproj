@@ -738,6 +738,8 @@
     <Compile Include="Assets\SystemObject\Fungus\Thirdparty\Usfxr\Scripts\SfxrCacheSurrogate.cs" />
     <Compile Include="Assets\SystemObject\Fungus\Thirdparty\Usfxr\Scripts\SfxrParams.cs" />
     <Compile Include="Assets\SystemObject\Fungus\Thirdparty\Usfxr\Scripts\SfxrSynth.cs" />
+    <Compile Include="Assets\TrainSystem\ItemSlot.cs" />
+    <Compile Include="Assets\TrainSystem\TrainDessertManager.cs" />
     <Compile Include="Assets\TrainSystem\TrainManager.cs" />
     <None Include="Assets\SystemObject\Fungus\Thirdparty\ThirdPartyNotices.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
