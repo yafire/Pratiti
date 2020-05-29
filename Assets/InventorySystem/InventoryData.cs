@@ -37,11 +37,7 @@ namespace InventorySystem
 
             List<Item> recipe = new List<Item>();
 
-            Debug.Log("待解決bug：");
-            AddItem(new Item { itemName = Item.ItemName.糖, quantity = 0 });
-            AddItem(new Item { itemName = Item.ItemName.雞蛋, quantity = 0 });
-            AddItem(new Item { itemName = Item.ItemName.布丁, quantity = 0 });
-            //AddItem(new Item { itemName = Item.ItemName.糖, quantity = 3 });
+            
 
             ShowItem();
 
