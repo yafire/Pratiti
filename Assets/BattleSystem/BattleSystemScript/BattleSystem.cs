@@ -489,8 +489,8 @@ namespace NameBattleSystem
             {
                 if (player.def > 0 || player.mDef > 0)
                 {
-                    player.def -= 20 * Time.fixedDeltaTime;
-                    player.mDef -= 20 * Time.fixedDeltaTime;
+                    player.def -= 0.1f * player.maxDef * Time.fixedDeltaTime;
+                    player.mDef -= 0.1f * player.maxMDef * Time.fixedDeltaTime;
                     if (ParryShieldAnimator.GetCurrentAnimatorStateInfo(0).IsName("Parry Shield idle"))
                     {
                         playerShield.SetActive(true);
@@ -505,8 +505,8 @@ namespace NameBattleSystem
             if (enemy.defStatus == 1 && motionStop == false)
             {
                 enemyShield.SetActive(true);
-                enemy.def -= 20 * Time.fixedDeltaTime;
-                enemy.mDef -= 20 * Time.fixedDeltaTime;
+                enemy.def -= 0.1f * enemy.maxDef * Time.fixedDeltaTime;
+                enemy.mDef -= 0.1f * enemy.maxMDef * Time.fixedDeltaTime;
             }
             else
             {

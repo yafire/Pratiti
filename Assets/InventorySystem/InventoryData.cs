@@ -26,8 +26,9 @@ namespace InventorySystem
 
         public void Awake()
         {
+            Debug.Log("Awake!!!!");
             if (instance != null)
-                Destroy(this);
+                return;
             instance = this;
             ingredientInventory = new List<Item>();    
             dessertInventory = new List<Item>();    
@@ -41,6 +42,8 @@ namespace InventorySystem
             AddItem(new Item { itemName = Item.ItemName.雞蛋, quantity = 0 });
             AddItem(new Item { itemName = Item.ItemName.布丁, quantity = 0 });
             //AddItem(new Item { itemName = Item.ItemName.糖, quantity = 3 });
+
+            ShowItem();
 
             myCookBook.GetCookBook().Add(
                 Item.ItemName.布丁, new Recipe(
@@ -73,10 +76,16 @@ namespace InventorySystem
                     Debug.Log("甜點數增加" + item.itemName + item.quantity);
                     Item.ItemName iN = item.itemName;
                     FindItem(new Item(iN, 0)).quantity += item.quantity ;
+                    foreach(Item it in ingredientInventory)
+                    {
+                        Debug.Log(it.itemName.ToString() + " has " + it.quantity.ToString());
+                    }
+                    Debug.Log(FindItem(new Item(iN, 0)).quantity);
                     //FindItem(item).quantity += item.quantity;
                     //iL.quantity += item.quantity;
                     Debug.Log("引入的ithem甜點數變成" + item.itemName + item.quantity);
                     Debug.Log("甜點數變成" + iL.itemName + iL.quantity);
+                    break;
                 }
             }
 

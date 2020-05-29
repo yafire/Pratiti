@@ -145,8 +145,8 @@ public class FungusManagerSystem : IGameSystem
     // 贏了戰鬥
     private void Win()
     {
-        BattleUseData m_battleUseData = GameObject.Find("GameData").GetComponent<BattleUseData>();
-        m_SControl.AddItem(m_battleUseData.GetItem); // 增加甜點數量
+        //BattleUseData m_battleUseData = GameObject.Find("GameData").GetComponent<BattleUseData>();
+        //m_SControl.AddItem(m_battleUseData.GetItem); // 增加甜點數量
         // 增加技能點數
         PlayBlock("WinBattle");
     }

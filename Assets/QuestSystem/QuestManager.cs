@@ -25,11 +25,11 @@ namespace QuestSystem
 
         public void Awake()
         {
-            if (instance != null)
-                Destroy(this);
-            instance = this;
+            questData = GameObject.Find("GameData").GetComponent<QuestData>();
 
-            questData = GameObject.Find("QuestData").GetComponent<QuestData>();
+            questData.questManager = this.gameObject;
+            questData.OKButton = OKButton;
+
             Debug.Log(questData);
             questList = questData.GetQuestList();
         }

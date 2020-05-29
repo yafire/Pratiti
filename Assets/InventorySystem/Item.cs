@@ -30,8 +30,55 @@ namespace InventorySystem {
             堅果,
             拴繩,
             糖,
-            布丁,
-            巧克力蛋糕
+            小麥,
+            巧克力蛋糕,
+            馬卡龍,
+            奶油派,
+            C型麵包,
+            黯然銷魂派,
+            麻糬,
+            鬆餅,
+            布丁
+        }
+
+        public int[] GetItemFunction(Item item)
+        {
+            switch (item.itemName)
+            {
+                case ItemName.堅果:
+                case ItemName.巧克力:
+                case ItemName.牛奶:
+                case ItemName.糖:
+                case ItemName.藍莓:
+                case ItemName.雞蛋:
+                case ItemName.黃油:
+                case ItemName.小麥:
+                    return new int[8] { 0, 0, 0, 0, 0, 0, 5, 0};
+
+                case ItemName.巧克力蛋糕:
+                    return new int[8] { 0, 10, 0, 10, 0, 0, 0, 0 };
+                case ItemName.馬卡龍:
+                    return new int[8] { 0, 0, 0, 0, 10, 0, 0, 0 };
+                case ItemName.奶油派:
+                    return new int[8] { 10, 0, 0, 0, 0, 0, 0, 0 };
+                case ItemName.C型麵包:
+                    return new int[8] { 0, 10, 0, 0, 0, 0, 0, 0 };
+                case ItemName.麻糬:
+                    return new int[8] { 0, 0, 10, 0, 0, 0, 0, 0 };
+                case ItemName.鬆餅:
+                    return new int[8] { 0, 0, 0, 0, 0, 10, 0, 0 };
+                case ItemName.布丁:
+                    return new int[8] { 0, 0, 0, 10, 0, 0, 0, 0 };
+
+                case ItemName.黯然銷魂派:
+                    return new int[8] { 10, 10, 10, 10, 10, 10, 0, 0 };
+                case ItemName.快樂草:
+                    return new int[8] { 0, 0, 0, 0, 0, 0, 0, 15 };
+                default:
+                    break;
+            }
+            Debug.Log("null item");
+            return new int[8] { 0, 0, 0, 0, 0, 0, 0, 0 }; ;
         }
 
         public string ItemInfo(Item item){
@@ -102,5 +149,5 @@ namespace InventorySystem {
                 case ItemName.布丁: return Resources.Load<Sprite>("ItemAssets/布丁");
             }
         }
-    }    
+       }    
 }

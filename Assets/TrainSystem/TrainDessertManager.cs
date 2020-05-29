@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using InventorySystem;
-
+using UnityEngine.UI;
 
 namespace TrainSystem
 {
@@ -12,13 +12,12 @@ namespace TrainSystem
         public GameObject itemSlotGrid;
         public GameObject itemSlot;
         public GameObject cloneSlot;
+        public GameObject trainManager;
 
-        private void Awake()
-        {
-            inventoryData = GameObject.Find("GameData").GetComponent<InventoryData>();
-        }
         public void Initialize()
         {
+            inventoryData = GameObject.Find("GameData").GetComponent<InventoryData>();
+            trainManager = GameObject.Find("TrainManager");
             this.gameObject.SetActive(true);
             DeetoryDessertPanel();
             RefreshDessertPanel();
@@ -30,11 +29,26 @@ namespace TrainSystem
             {
                 cloneSlot = Instantiate(itemSlot, itemSlotGrid.transform);
                 cloneSlot.GetComponent<TrainSystem.ItemSlot>().thisItem = item;
+                Debug.Log(item.quantity);
+                cloneSlot.GetComponent<Button>().onClick.AddListener(delegate ()
+                {
+                    trainManager.GetComponent<TrainManager>().StatUpDesseert(item);
+                    trainManager.GetComponent<TrainManager>().RefreshStatPanel();
+                    DeetoryDessertPanel();
+                    RefreshDessertPanel();
+                });
             }
             foreach(Item item in inventoryData.GetIngredientInventory())
             {
                 cloneSlot = Instantiate(itemSlot, itemSlotGrid.transform);
                 cloneSlot.GetComponent<TrainSystem.ItemSlot>().thisItem = item;
+                cloneSlot.GetComponent<Button>().onClick.AddListener(delegate()
+                {
+                    trainManager.GetComponent<TrainManager>().StatUpDesseert(item);
+                    trainManager.GetComponent<TrainManager>().RefreshStatPanel();
+                    DeetoryDessertPanel();
+                    RefreshDessertPanel();
+                });
             }
         }
 

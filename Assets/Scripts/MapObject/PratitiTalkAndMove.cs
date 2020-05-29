@@ -33,6 +33,14 @@ public class PratitiTalkAndMove : MonoBehaviour
     [Header("掉落甜點類型")]
     public Item getItem;
 
+    // 是否要顯示任務中
+    public bool haveMission;
+
+    // 顯示任務icon
+    public GameObject missionIcon;
+    internal GameObject micon;
+    private bool hasmicon;
+
     private void Awake()
     {
         nav = GetComponent<Navigation2D>();
@@ -134,24 +142,50 @@ public class PratitiTalkAndMove : MonoBehaviour
     // 觸發對話
     //=======
 
-    private void OnTriggerEnter2D(UnityEngine.Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
+
         // 當玩家靠夠近時，可以開始對話（inView = true;）
         if (other.gameObject.CompareTag("Player"))
         {
-            other.GetComponent<Controller>().SpawnButton();
+            if (haveMission)
+            {
+                ShowMissionIcon();
+            }
+            else
+            {
+                CloseMissionIcon();
+            }
             inView = true;
         }
     }
 
-    private void OnTriggerExit2D(UnityEngine.Collider2D other)
+    private void OnTriggerExit2D(Collider2D other)
     {
         // 當玩家靠太遠時，無法開始對話（inView = true;）
         if (other.gameObject.CompareTag("Player"))
         {
-            other.GetComponent<Controller>().DestroyButton();
+
+            CloseMissionIcon();
             inView = false;
         }
+    }
+
+    public void ShowMissionIcon()
+    {
+        if (!hasmicon)
+        {
+            micon = Instantiate(missionIcon);
+            micon.transform.position = transform.position + new Vector3(0, 3f, 0);
+
+            hasmicon = true;
+        }
+    }
+
+    public void CloseMissionIcon()
+    {
+        Destroy(micon);
+        hasmicon = false;
     }
 
     //=======

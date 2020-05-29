@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using InventorySystem;
-using TMPro;
 
 namespace TrainSystem {
 	public class TrainManager : MonoBehaviour
 	{
+		public InventoryData inventoryData;
+
 		//精靈列表    public List<Pratiti> pratitiData; 
 		private List<Pratiti> pratitiData;
 		public GameObject pratitiSlotGrid;
@@ -32,6 +33,7 @@ namespace TrainSystem {
 
 		private void Awake()
 		{
+			inventoryData = GameObject.Find("GameData").GetComponent<InventoryData>();
 			pratitiData = GameObject.Find("GameData").GetComponent<PratitiData>().pratitiData;
 		}
 
@@ -39,7 +41,6 @@ namespace TrainSystem {
 		{
 			this.gameObject.transform.parent.gameObject.SetActive(true);
 			RefreshPrattiScrollPanel();
-			Debug.Log(pratitiData.Count);
 			pratitiSlotGrid.transform.GetChild(0).gameObject.GetComponent<Button>().onClick.Invoke();
 		}
 
@@ -200,7 +201,7 @@ namespace TrainSystem {
 		{
 			int[] func = item.GetItemFunction(item);
 
-			bool isConsume = true;
+			bool isConsume = false;
 
 			for (int i = 0; i < 8; i++)
 			{
@@ -208,14 +209,160 @@ namespace TrainSystem {
 				{
 					case 0:
 						if (pratiti.hp + func[i] > pratiti.maxHp)
+						{
+							if (isConsume) 
+							{
+								break;
+							}
 							isConsume = false;
+						}
+						else
+						{
+							pratiti.hp += func[i];
+							if(pratiti.hp > pratiti.maxHp)
+							{
+								pratiti.hp = pratiti.maxHp;
+							}
+							isConsume = true;
+						}
 						break;
+
 					case 1:
-						
+						if (pratiti.atk + func[i] > pratiti.maxAtk)
+						{
+							if (isConsume)
+							{
+								break;
+							}
+							isConsume = false;
+						}
+						else
+						{
+							pratiti.atk += func[i];
+							if (pratiti.atk > pratiti.maxAtk)
+							{
+								pratiti.atk = pratiti.maxAtk;
+							}
+							isConsume = true;
+						}
+						break;
+
+					case 2:
+						if (pratiti.def + func[i] > pratiti.maxDef)
+						{
+							if (isConsume)
+							{
+								break;
+							}
+							isConsume = false;
+						}
+						else
+						{
+							pratiti.def += func[i];
+							if (pratiti.def > pratiti.maxDef)
+							{
+								pratiti.def = pratiti.maxDef;
+							}
+							isConsume = true;
+						}
+						break;
+
+					case 3:
+						if (pratiti.mAtk + func[i] > pratiti.maxMAtk)
+						{
+							if (isConsume)
+							{
+								break;
+							}
+							isConsume = false;
+						}
+						else
+						{
+							pratiti.mAtk += func[i];
+							if (pratiti.mAtk > pratiti.maxMAtk)
+							{
+								pratiti.mAtk = pratiti.maxMAtk;
+							}
+							isConsume = true;
+						}
+						break;
+
+					case 4:
+						if (pratiti.mDef + func[i] > pratiti.maxMDef)
+						{
+							if (isConsume)
+							{
+								break;
+							}
+							isConsume = false;
+						}
+						else
+						{
+							pratiti.mDef += func[i];
+							if (pratiti.mDef > pratiti.maxMDef)
+							{
+								pratiti.mDef = pratiti.maxMDef;
+							}
+							isConsume = true;
+						}
+						break;
+
+					case 5:
+						if (pratiti.agi + func[i] > pratiti.maxAgi)
+						{
+							if (isConsume)
+							{
+								break;
+							}
+							isConsume = false;
+						}
+						else
+						{
+							pratiti.agi += func[i];
+							if (pratiti.agi > pratiti.maxAgi)
+							{
+								pratiti.agi = pratiti.maxAgi;
+							}
+							isConsume = true;
+						}
+						break;
+
+					case 6:
+						if (pratiti.pressure < 0)
+						{
+							if (isConsume)
+							{
+								break;
+							}
+							isConsume = false;
+						}
+						else
+						{
+							pratiti.pressure -= func[i];
+							if (pratiti.pressure < 0)
+							{
+								pratiti.pressure = 0;
+							}
+							isConsume = true;
+						}
+						break;
+
+					case 7:
+						if (func[i] > 0)
+						{
+							pratiti.generalPoints += func[i];
+							isConsume = true;
+						}
+						break;
 
 					default:
 						break;
 				} 
+			}
+
+			if (isConsume)
+			{
+				inventoryData.RemoveItem(item);
 			}
 		}
 	}

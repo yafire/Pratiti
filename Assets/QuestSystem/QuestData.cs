@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using InventorySystem;
+using UnityEngine.SceneManagement;
 
 namespace QuestSystem 
 {
@@ -10,7 +11,6 @@ namespace QuestSystem
     public class QuestData : MonoBehaviour
     {
         private static QuestData instance;
-        
 
         private static List<Quest> questList;
 
@@ -21,11 +21,14 @@ namespace QuestSystem
         public GameObject OKButton;
         private InventoryData inventoryData;
 
-        [SerializeField]
-        private GameObject questManager;
+        public GameObject questManager;
 
         void Awake()
         {
+            if (instance != null)
+                return;
+            instance = this;
+
             inventoryData = GameObject.Find("GameData").GetComponent<InventoryData>();
 
             itemCheck = new Dictionary<string , List<Item>>();

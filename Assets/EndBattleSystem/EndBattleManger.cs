@@ -174,6 +174,7 @@ public class EndBattleManger : MonoBehaviour
         cloneSlot = Instantiate(itemSlot, itemSlotGrid.transform);
         cloneSlot.GetComponent<ItemSlot>().thisItem = m_battleUseData.GetItem;
 
+        Debug.Log("RefreshEndBattlePanel_Win");
         inventoryData.AddItem(m_battleUseData.GetItem);
 
         pratiti.generalPoints += 30;

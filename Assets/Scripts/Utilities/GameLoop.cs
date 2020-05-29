@@ -46,7 +46,7 @@ public class GameLoop : MonoBehaviour
         UData.smallMap = smallMap;
         UData.PlayerPos = playerStartPos;
         SystemController.Instance.PlayBlock("S", "InitialStoryFlow");
-        // SystemController.Instance.PlayBlock("S", "Start");
+        SystemController.Instance.PlayBlock("S", "Start");
 
         SystemController.Instance.ClearPratitiData();
         SystemController.Instance.AddPratiti(PratitiIntialize());

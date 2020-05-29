@@ -21,7 +21,7 @@ namespace TrainSystem
             itemImage.sprite = thisItem.ItemSprite(thisItem);
             itemQuantity.text = thisItem.quantity.ToString();
             itemName.text = thisItem.itemName.ToString();
-            itemFunc.text = thisItem.GetItemFunction(thisItem).ToString();
+            itemFunc.text = "null";
         }
     }
 }
