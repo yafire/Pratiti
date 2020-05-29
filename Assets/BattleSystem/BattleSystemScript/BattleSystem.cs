@@ -178,14 +178,29 @@ namespace NameBattleSystem
         public Color playerColor;
         public Color enemyColor;
 
+
+        // 敵我雙方帕拉提提
+        BattleUseData m_battleUseData;
+        Pratiti Ed;
+        Pratiti Pd;
         void Start()
         {
             Time.timeScale = 1f;
 
 
-            BattleUseData m_battleUseData = GameObject.Find("GameData").GetComponent<BattleUseData>();
-            Pratiti Ed = m_battleUseData.EnemyPratiti;
-            Pratiti Pd = m_battleUseData.PlayerPratiti;
+            m_battleUseData = GameObject.Find("GameData").GetComponent<BattleUseData>();
+            if (m_battleUseData != null)
+            {
+                Ed = m_battleUseData.EnemyPratiti;
+                Pd = m_battleUseData.PlayerPratiti;
+            }
+            else
+            {
+                Ed = null;
+                Pd = null;
+                Debug.Log("BattleSystem找不到GameData");
+            }
+            
             // Cobra新增：讀取帕拉提提資料
             // PratitiBattleData m_EnemyData;
             if (Ed == null && Pd == null)

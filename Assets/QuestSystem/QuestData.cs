@@ -10,6 +10,7 @@ namespace QuestSystem
     public class QuestData : MonoBehaviour
     {
         private static QuestData instance;
+        
 
         private static List<Quest> questList;
 
@@ -19,6 +20,7 @@ namespace QuestSystem
         public Quest firstQuest;
         public GameObject OKButton;
         private InventoryData inventoryData;
+
         [SerializeField]
         private GameObject questManager;
 

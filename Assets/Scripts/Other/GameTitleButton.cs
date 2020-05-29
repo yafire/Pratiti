@@ -52,7 +52,7 @@ public class GameTitleButton : MonoBehaviour, IPointerEnterHandler
         // 初始化遊戲數值
         Debug.Log("之後會補充初始化設定");
         /*gameManager = FindObjectOfType<GameManager>();
-        gameManager.gamedata.PlayerPos = new Vector3(-16, 27, 0);
+        gameManager.gamedata.PlaxyerPos = new Vector3(-16, 27, 0);
         gameManager.gamedata.Map = "Map";
         gameManager.gamedata.smallMap = "Map1";
 
@@ -60,7 +60,7 @@ public class GameTitleButton : MonoBehaviour, IPointerEnterHandler
         storyManager = FindObjectOfType<StoryManager>();
         storyManager.InitialStoryBoolTrue();
         */
-        SceneManager.LoadScene("EdwinHouse");
+        SceneManager.LoadScene("Map");
     }
 
 }
