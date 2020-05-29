@@ -36,16 +36,16 @@ namespace QuestSystem
 
         public void Initialize()
         {
-            Debug.Log("???");
+            Debug.Log("InitialQuestPanel");
             this.gameObject.transform.parent.gameObject.SetActive(true);
             questData.CheckAcceptedQuest();
 
-            if(questData.GetCurrentQuest() == null)
+            if (questData.GetCurrentQuest() == null)
             {
                 Debug.Log("questData.GetCurrentQuest() == null)");
                 questSlot.transform.GetChild(0).gameObject.GetComponent<Text>().text = "";
                 questSlot.transform.GetChild(1).gameObject.GetComponent<Text>().text = "";
-                Destroy(questEventSlotGrid.transform);
+                DestoryQuestPanel();
             }
             else
             {

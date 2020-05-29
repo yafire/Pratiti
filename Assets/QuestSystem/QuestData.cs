@@ -45,15 +45,17 @@ namespace QuestSystem
             firstQuest = new Quest(Quest.QuestName.firstQuest , aString);
 
 
-            QuestEvent m1_1 = new QuestEvent("去村子找甜點屋老闆", "nani", null);
+            QuestEvent m1_1 = new QuestEvent("去村子找甜點屋老闆", "", null);
             m1_1.questDemand = new QuestDemand(false);
             boolCheck.Add(m1_1.GetID(), m1_1.questDemand.flags);
             firstQuest.AddQuestEvent(m1_1);
 
             QuestEvent m1_2 = new QuestEvent("蒐集3個砂糖、3個雞蛋", "" , null);
+            
             m1_2.questDemand = new QuestDemand(
                 new Item { itemName = Item.ItemName.糖 , quantity = 3 },
-                new Item { itemName = Item.ItemName.雞蛋, quantity = 3 });
+                new Item { itemName = Item.ItemName.雞蛋, quantity = 0 });
+            
             itemCheck.Add(m1_2.GetID(), m1_2.questDemand.items);
             firstQuest.AddQuestEvent(m1_2);
 
@@ -69,7 +71,7 @@ namespace QuestSystem
 
             firstQuest.BFS(m1_1);
             //firstQuest.PrintPath();
-
+        
             questList.Add(firstQuest);
         }
         
@@ -79,46 +81,78 @@ namespace QuestSystem
             {
                 case 1:
                     Debug.Log("first event");
-                    if(ItemCheck(FindQuest(firstQuest).GetCurrentEvent().GetID()))
+                    foreach(bool flag in boolCheck[firstQuest.questEvents[0].GetID()])
                     {
-                        Debug.Log("itemCheck true");
-                        OKButton.GetComponent<Button>().interactable = true;
-                        OKButton.GetComponent<Button>().onClick.AddListener(delegate ()
-                        {
-                            Debug.Log(FindQuest(firstQuest));
-                            Debug.Log(FindQuest(firstQuest).GetCurrentEvent());
-                            FindQuest(firstQuest).GetCurrentEvent().UpDateQuestEvent(QuestEvent.EventStatus.done);
-                            questManager.GetComponent<QuestManager>().Initialize();
-                            OKButton.GetComponent<Button>().onClick.RemoveAllListeners();
-                            OKButton.GetComponent<Button>().interactable = false;
-                        });
+                        if(!flag)
+                        { 
+                            Debug.Log("no enough");
+                            return;
+                        }
                     }
-                    else
+                        
+                    Debug.Log("boolCheck true");
+                    OKButton.GetComponent<Button>().interactable = true;
+                    OKButton.GetComponent<Button>().onClick.AddListener(delegate ()
                     {
-                        Debug.Log("check no");
-                    }
+                        Debug.Log(FindQuest(firstQuest));
+                        Debug.Log(FindQuest(firstQuest).GetCurrentEvent());
+                        FindQuest(firstQuest).GetCurrentEvent().UpDateQuestEvent(QuestEvent.EventStatus.done);
+                        OKButton.GetComponent<Button>().interactable = false;
+                        questManager.GetComponent<QuestManager>().Initialize();
+                        OKButton.GetComponent<Button>().onClick.RemoveAllListeners();
+                    });
+                    
                     break;
 
                 case 2:
-                    foreach (bool bC in boolCheck[FindQuest(firstQuest).questEvents[1].GetID()])
+                    Debug.Log("second event");
+                    if (ItemCheck(GetAcceptedQuest().GetCurrentEvent().GetID()))
                     {
-                        if (!bC)
-                        {
-                            Debug.Log("not true");
-                            break;
-                        }
-
+                        Debug.Log("hahaha");
                         OKButton.GetComponent<Button>().interactable = true;
                         OKButton.GetComponent<Button>().onClick.AddListener(delegate ()
                         {
+
                             Debug.Log("Second event done");
+
+                            foreach (Item item in itemCheck[GetAcceptedQuest().GetCurrentEvent().GetID()])
+                                inventoryData.RemoveItem(item);
+
                             FindQuest(firstQuest).GetCurrentEvent().UpDateQuestEvent(QuestEvent.EventStatus.done);
-                            questManager.GetComponent<QuestManager>().Initialize();
-                            OKButton.GetComponent<Button>().onClick.RemoveAllListeners();
+
                             OKButton.GetComponent<Button>().interactable = false;
-                            // 第二個事件寫在這
+
+                            questManager.GetComponent<QuestManager>().Initialize();
+
+                            OKButton.GetComponent<Button>().onClick.RemoveAllListeners();
+                            SystemController.Instance.PlayBlock("S", "EnoughDessert");
                         });
                     }
+                    
+                    break;
+                case 3:
+                    Debug.Log("third event");
+                    foreach (bool flag in boolCheck[GetAcceptedQuest().GetCurrentEvent().GetID()])
+                    {
+                        if (!flag)
+                        {
+                            Debug.Log("no enough");
+                            return;
+                        }
+                    }
+
+                    Debug.Log("boolCheck true");
+                    OKButton.GetComponent<Button>().interactable = true;
+                    OKButton.GetComponent<Button>().onClick.AddListener(delegate ()
+                    {
+                        Debug.Log(FindQuest(firstQuest));
+                        Debug.Log(FindQuest(firstQuest).GetCurrentEvent());
+                        FindQuest(firstQuest).GetCurrentEvent().UpDateQuestEvent(QuestEvent.EventStatus.done);
+                        OKButton.GetComponent<Button>().interactable = false;
+                        questManager.GetComponent<QuestManager>().Initialize();
+                        OKButton.GetComponent<Button>().onClick.RemoveAllListeners();
+                    });
+
                     break;
 
 
@@ -145,6 +179,7 @@ namespace QuestSystem
         public void GetFirstQuest()
         {
             firstQuest.questStatus = Quest.QuestStatus.accepted;
+            Debug.Log(GetAcceptedQuest());
         }
 
         /*
@@ -174,31 +209,51 @@ namespace QuestSystem
                     CheckFirstQuest();
                     break;
                 default:
-                    Debug.Log("???");
                     break;
             }
         }
 
         public bool ItemCheck(string id)    
         {
-            Debug.Log("itemCheck " + id);
+            Debug.Log(id);
+            var keys = itemCheck.Keys;
+            foreach(string key in keys)
+            {
+                Debug.Log(key);
+            }
 
-            bool isEnough = true;
+            int isEnough = 1;
+            bool findItem = false;
             foreach (Item iC in itemCheck[id])
             {
+                Debug.Log(iC.itemName);
                 foreach (Item item in inventoryData.GetInventory(iC))
                 {
-                    if (iC.itemName == item.itemName && iC.quantity == item.quantity && isEnough == true)
-                        isEnough = true;
-                    if (iC.itemName == item.itemName && iC.quantity != item.quantity)
-                        isEnough = false;
-                    Debug.Log("need"+iC.quantity);
-                    Debug.Log("have"+item.quantity+item.itemName.ToString());
+                    Debug.Log(item.itemName);
+                    if (iC.itemName == item.itemName)
+                    {
+                        findItem = true;
+                        if (item.quantity < iC.quantity)
+                        {
+                            isEnough -= 1;
+                            Debug.Log("need" + iC.itemName + iC.quantity);
+                            Debug.Log("have" + item.quantity + item.itemName.ToString());
+                            break;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }   
                 }
-                if (inventoryData.FindItem(iC) == null)
-                    isEnough = false;
+
+                if(!findItem)
+                {
+                    isEnough -= 1;
+                }
             }
-            return isEnough;
+            Debug.Log(isEnough);
+            return (isEnough == 1 ? true : false);
         }
 
         public bool IsOK()

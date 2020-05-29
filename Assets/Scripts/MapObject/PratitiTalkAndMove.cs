@@ -29,7 +29,7 @@ public class PratitiTalkAndMove : MonoBehaviour
     public int IV;
     [Range(0, 100)]
     public int level;
-
+       
     [Header("掉落甜點類型")]
     public Item getItem;
 
@@ -50,6 +50,7 @@ public class PratitiTalkAndMove : MonoBehaviour
         else
             pC.RandomData(PratitiBrand.GetPratitiBrand(pratitiName), level);
         thisPratiti = pC.toControl;
+        pC.toControl.winItem = getItem;
     }
 
     void Start()

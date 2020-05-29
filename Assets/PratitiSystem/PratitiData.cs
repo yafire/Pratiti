@@ -21,8 +21,8 @@ public class PratitiData : MonoBehaviour
     {
         pratitiData.Clear();
         PratitiDataPath = @"Assets/PratitiData/PratitiDataJsonInfo.txt";
-        LoadPratitiData();
-        /*
+        //LoadPratitiData();
+        
         PratitiController pC = new PratitiController();
         PratitiController pC2 = new PratitiController();
 
@@ -33,7 +33,7 @@ public class PratitiData : MonoBehaviour
 
         SavePratitiData(pratitiData);   //存檔方式
         //LoadPratitiData();          //讀檔方式
-        */
+        
     }
 
     static public void SavePratitiData(List<Pratiti> pratitiData)
