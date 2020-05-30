@@ -80,7 +80,7 @@ public class TutorialControl : MonoBehaviour
         {
             nextDialog = false;
         }
-        textObj.transform.position = new Vector3(dialogBoxChildObj.transform.position.x * 107 + 963.4805f, dialogBoxChildObj.transform.position.y * 107 + 531.9f);
+        textObj.transform.position = new Vector3(dialogBoxChildObj.transform.position.x * 150 + 1550f, dialogBoxChildObj.transform.position.y * 150 + 800.9f);
         stopTalkingTriangle.transform.position = new Vector3(dialogBoxChildObj.transform.position.x - 1.676f, dialogBoxChildObj.transform.position.y - 2.0029f);
        
     }
@@ -95,7 +95,7 @@ public class TutorialControl : MonoBehaviour
         yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.LeftArrow));
         tutorialState = 3;
         StartCoroutine(PlayerFirstAttack());
-        yield return new WaitUntil(() => playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Feather Hit Complete"));
+        yield return new WaitUntil(() => playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Hit Complete"));
         isTalking = true;
         tutorialState = 4;
         StartCoroutine(NipliseGotCrazy());

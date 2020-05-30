@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -36,11 +37,14 @@ namespace NameBattleSystem
             public GameObject gameObj02;
             public GameObject gameObj03;
             public GameObject gameObj04;
+            public GameObject gameObj05;
+            public GameObject gameObj06;
+            public GameObject gameObj07;
             public bool isHitRecovery;
             public bool isParryReady;
             public bool isParry;
             public bool ParrySuccess;
-            public pratiti(float attack, float magicAttack, float defense, float magicDefense, float agility, float hitpoint, float Energy, float maxDefense, float maxMagicDefense, int defenseEmpty, int magicDefenseEmpty, int defenseStatus, float hurt_Time, float AttackStartHitRecoveryTime, float AttackCompleteHitRecoveryTime, float AttackMissHitRecoveryTime, float AbilityStartHitRecoveryTime, float AbilityEndHitRecoveryTime, float HitRecoveryTime, float HitRecoveryTimeMax, GameObject gameObject01, GameObject gameObject02, GameObject gameObject03, GameObject gameObject04, bool IsHitReacovery, bool IsParryReady, bool IsParry, bool ParrySuccessful)
+            public pratiti(float attack, float magicAttack, float defense, float magicDefense, float agility, float hitpoint, float Energy, float maxDefense, float maxMagicDefense, int defenseEmpty, int magicDefenseEmpty, int defenseStatus, float hurt_Time, float AttackStartHitRecoveryTime, float AttackCompleteHitRecoveryTime, float AttackMissHitRecoveryTime, float AbilityStartHitRecoveryTime, float AbilityEndHitRecoveryTime, float HitRecoveryTime, float HitRecoveryTimeMax, GameObject gameObject01, GameObject gameObject02, GameObject gameObject03, GameObject gameObject04, GameObject gameObject05, GameObject gameObject06, GameObject gameObject07, bool IsHitReacovery, bool IsParryReady, bool IsParry, bool ParrySuccessful)
             {
                 atk = attack;
                 mAtk = magicAttack;
@@ -66,6 +70,9 @@ namespace NameBattleSystem
                 gameObj02 = gameObject02;
                 gameObj03 = gameObject03;
                 gameObj04 = gameObject04;
+                gameObj05 = gameObject05;
+                gameObj06 = gameObject06;
+                gameObj07 = gameObject07;
                 isHitRecovery = IsHitReacovery;
                 isParryReady = IsParryReady;
                 isParry = IsParry;
@@ -156,9 +163,14 @@ namespace NameBattleSystem
         public GameObject PressAbilityButton;
         public GameObject PressParryButton;
         public GameObject MENU;
+        public GameObject Camera;
+        public GameObject PlayerAbilityHint;
+        public GameObject EnemyAbilityHint;
+        public Animator PlayerAbilityHintAnimator;
+        public Animator EnemyAbilityHintAnimator;
         public Animator playerAnimation;
         public Animator enemyAnimation;
-        public Animator ParryShieldAnimator;
+        public Animator PlayerParryShieldAnimator;
         public float playerHP;
         public float enemyHP;
         public float playerMaxHp;
@@ -173,24 +185,38 @@ namespace NameBattleSystem
         public float random02;
         public float Damage;
         public float ParryTime;
+        public float DelayNumber;
         public static bool isEnd;
         public static bool motionStop;
         public Color playerColor;
         public Color enemyColor;
 
-
         // 敵我雙方帕拉提提
         BattleUseData m_battleUseData;
         Pratiti Ed;
         Pratiti Pd;
+
         void Start()
         {
+            Player = GameObject.Find("player").transform.GetChild(3).gameObject;
+            Enemy = GameObject.Find("enemy").transform.GetChild(3).gameObject;
+            playerShield = GameObject.Find("player").transform.GetChild(0).gameObject;
+            enemyShield = GameObject.Find("enemy").transform.GetChild(0).gameObject;
+            playerParryShield = GameObject.Find("player").transform.GetChild(1).gameObject;
+            PlayerAbilityHint = GameObject.Find("player").transform.GetChild(2).gameObject;
+            EnemyAbilityHint = GameObject.Find("enemy").transform.GetChild(2).gameObject;
+            playerAnimation = Player.GetComponent<Animator>();
+            enemyAnimation = Enemy.GetComponent<Animator>();
+            PlayerParryShieldAnimator = playerParryShield.GetComponent<Animator>();
+            PlayerAbilityHintAnimator = PlayerAbilityHint.transform.GetChild(0).gameObject.GetComponent<Animator>();
+            EnemyAbilityHintAnimator = EnemyAbilityHint.transform.GetChild(0).gameObject.GetComponent<Animator>();
+
             Time.timeScale = 1f;
 
-
-            m_battleUseData = GameObject.Find("GameData").GetComponent<BattleUseData>();
-            if (m_battleUseData != null)
+            
+            if (GameObject.Find("GameData") != null)
             {
+                m_battleUseData = GameObject.Find("GameData").GetComponent<BattleUseData>();
                 Ed = m_battleUseData.EnemyPratiti;
                 Pd = m_battleUseData.PlayerPratiti;
             }
@@ -200,26 +226,26 @@ namespace NameBattleSystem
                 Pd = null;
                 Debug.Log("BattleSystem找不到GameData");
             }
-            
+
             // Cobra新增：讀取帕拉提提資料
             // PratitiBattleData m_EnemyData;
-            if (Ed == null && Pd == null)
+            if (Ed == null || Pd == null)
             {
-                player = new pratiti(550, 550, 500, 500, 500, 500, 0, 500, 500, 1, 1, 0, 0, 1.466f, 1.33f, 1.33f, 0.9f, 0.8f, 0, 0, null, null, null, null, false, false, false, false);
-                enemy = new pratiti(550, 500, 550, 500, 500, 500, 0, 550, 500, 1, 1, 1, 0, 0.35f, 1.5f, 1.5f, 1.2f, 1.5f, 0, 0, null, null, null, null, false, false, false, false);
+                player = new pratiti(550, 550, 500, 500, 500, 500, 0, 500, 500, 1, 1, 0, 0, 1.466f, 1.33f, 1.33f, 0.9f, 0.8f, 0, 0, null, null, null, null, null, null, null, false, false, false, false);
+                enemy = new pratiti(550, 500, 550, 500, 500, 500, 0, 550, 500, 1, 1, 1, 0, 0.35f, 1.5f, 1.5f, 1.2f, 1.5f, 0, 0, null, null, null, null, null, null, null, false, false, false, false);
             }
             else
             {
 
-                player = new pratiti(Pd.atk, Pd.mAtk, Pd.def, Pd.mDef, Pd.agi, Pd.hp, 0, Pd.mDef, Pd.mDef, 1, 1, 0, 0, 1.466f, 1.33f, 1.33f, 0.9f, 0.8f, 0, 0, null, null, null, null, false, false, false, false);
-                enemy = new pratiti(Ed.atk, Ed.mAtk, Ed.def, Ed.mDef, Ed.agi, Ed.hp, 0, Ed.mDef, Ed.mDef, 1, 1, 1, 0, 0.35f, 1.5f, 1.5f, 1.2f, 1.5f, 0, 0, null, null, null, null, false, false, false, false);
+                player = new pratiti(Pd.atk, Pd.mAtk, Pd.def, Pd.mDef, Pd.agi, Pd.hp, 0, Pd.mDef, Pd.mDef, 1, 1, 0, 0, 1.466f, 1.33f, 1.33f, 0.9f, 0.8f, 0, 0, null, null, null, null, null, null, null, false, false, false, false);
+                enemy = new pratiti(Ed.atk, Ed.mAtk, Ed.def, Ed.mDef, Ed.agi, Ed.hp, 0, Ed.mDef, Ed.mDef, 1, 1, 1, 0, 0.35f, 1.5f, 1.5f, 1.2f, 1.5f, 0, 0, null, null, null, null, null, null, null, false, false, false, false);
             }
 
-                // Y.A你要用時，將上面註解，下面解除註解
-                //player = new pratiti(550, 550, 500, 500, 500, 500, 0, 500, 500, 1, 1, 0, 0, 0, 0, 0, 20, null, null, null, null, false, false, false, false);
-                //enemy = new pratiti(550, 500, 550, 500, 500, 500, 0, 550, 500, 1, 1, 1, 0, 0, 0, 0, 20, null, null, null, null, false, false, false, false);
+            // Y.A你要用時，將上面註解，下面解除註解
+            //player = new pratiti(550, 550, 500, 500, 500, 500, 0, 500, 500, 1, 1, 0, 0, 0, 0, 0, 20, null, null, null, null, false, false, false, false);
+            //enemy = new pratiti(550, 500, 550, 500, 500, 500, 0, 550, 500, 1, 1, 1, 0, 0, 0, 0, 20, null, null, null, null, false, false, false, false);
 
-                LCD = 0;
+            LCD = 0;
             LCDMax = ability01.cd;
             RCD01 = ability04.cd;
             RCD02 = ability05.cd;
@@ -231,14 +257,21 @@ namespace NameBattleSystem
             enemyMaxHp = enemy.hp;
             ParryTime = 0.1f;
             ButtonPressTime = 0.3f;
-            player.gameObj01 = Player;
-            player.gameObj02 = PlayerPart01;
-            player.gameObj03 = PlayerPart02;
-            player.gameObj04 = PlayerPart03;
+            player.gameObj01 = PlayerPart01;
+            player.gameObj02 = PlayerPart02;
+            player.gameObj03 = PlayerPart03;
+            player.gameObj04 = PlayerPart04;
+            player.gameObj05 = PlayerPart05;
+            player.gameObj06 = PlayerPart06;
+            player.gameObj07 = PlayerPart07;
             enemy.gameObj01 = Enemy;
             enemy.gameObj02 = Enemy;
             enemy.gameObj03 = Enemy;
             enemy.gameObj04 = Enemy;
+            enemy.gameObj05 = Enemy;
+            enemy.gameObj06 = Enemy;
+            enemy.gameObj07 = Enemy;
+            playerParryShield.transform.position = new Vector3(-4, playerParryShield.transform.position.y);
             playerColor = Player.GetComponent<SpriteRenderer>().color;
             enemyColor = Enemy.GetComponent<SpriteRenderer>().color;
             isEnd = false;
@@ -275,11 +308,12 @@ namespace NameBattleSystem
 
             hitRecoveryBarMask01.transform.localScale = new Vector3(this.transform.localScale.x, (player.hitRecoveryTime / player.hitRecoveryTimeMax), this.transform.localScale.z);
             hitRecoveryBarMask02.transform.localScale = new Vector3(this.transform.localScale.x, (player.hitRecoveryTime / player.hitRecoveryTimeMax), this.transform.localScale.z);
-            playerParryShield.transform.position = new Vector3(PlayerPart01.transform.position.x, PlayerPart01.transform.position.y);
-
+            PlayerAbilityHint.transform.position = new Vector3(Camera.transform.position.x, Camera.transform.position.y);
+            EnemyAbilityHint.transform.position = new Vector3(Camera.transform.position.x, Camera.transform.position.y);
         }
         void FixedUpdate()
         {
+            print(player.hp);
             if (enemy.hp <= 0)
             {
                 print("Win");
@@ -294,7 +328,7 @@ namespace NameBattleSystem
                 print("Lose");
                 isEnd = true;
                 UData.battleResult = BattleResult.lose;
-                SceneManager.LoadScene("EndBattle");
+                SceneManager.LoadScene("LoseBattle");
                 //SceneManager.LoadScene("Lose");
             }
 
@@ -313,20 +347,11 @@ namespace NameBattleSystem
             damage.GetComponentInChildren<Text>().text = "-" + Damage.ToString();
             playerAnimation.enabled = true;
             enemyAnimation.enabled = true;
-            enemyShield.transform.position = Enemy.transform.position - new Vector3(0.0609f, 0);
             player.defStatus = defense.defStatus;
             player.hurtTime -= Time.fixedDeltaTime;
             enemy.hurtTime -= Time.fixedDeltaTime;
 
-            if (playerAnimation.GetCurrentAnimatorStateInfo(0).IsTag("Hit") || playerAnimation.GetCurrentAnimatorStateInfo(0).IsName("feather ability02")) 
-            {
-                playerShield.transform.position = Player.transform.position + new Vector3(0.0005f, -0.7457f);
-            }
-            else
-            {
-                playerShield.transform.position = PlayerPart01.transform.position;
-            }
-            if (enemy.energy >= 0.95f * ability05.needEnergy && RCD02 <= 0 && enemy.isHitRecovery == false && motionStop == false)
+            if (enemy.energy >= 0.95f * ability05.needEnergy && RCD02 <= 0 && enemy.isHitRecovery == false && Time.timeScale == 1 && player.isHitRecovery == false && control.isCatching == false && motionStop == false)
             {
                 print("敵人使用技能");
                 enemy.energy = ability05.needEnergy;
@@ -334,17 +359,18 @@ namespace NameBattleSystem
                 enemy.hitRecoveryTime = enemy.abilityStartHitRecoveryTime + enemy.abilityEndHitRecoveryTime;
                 enemy.hitRecoveryTimeMax = enemy.hitRecoveryTime;
                 enemy.isHitRecovery = true;
-                enemyAnimation.SetTrigger("ability02 0");
+                enemyAnimation.SetTrigger("Ability");
+                EnemyAbilityHintAnimator.SetTrigger("Slide");
                 StartCoroutine(UseStrongAbility(enemy, player, Enemy, Player, ability05));
                 EnemyAbilityObj = Instantiate(EnemyAbility, EnemyAbility.transform.position, EnemyAbility.transform.rotation);
             }
-            if (RCD01 <= 0 && enemy.isHitRecovery == false && motionStop == false)
+            if (RCD01 <= 0 && enemy.isHitRecovery == false && Time.timeScale == 1 && control.isCatching == false && motionStop == false)
             {
                 print("敵人使用攻擊");
                 enemy.hitRecoveryTime = enemy.attackStartHitRecoveryTime + enemy.attackCompleteHitRecoveryTime;
                 enemy.hitRecoveryTimeMax = enemy.hitRecoveryTime;
                 enemy.isHitRecovery = true;
-                enemyAnimation.SetBool("ability01", true);
+                enemyAnimation.SetTrigger("Attack");
             }
 
             if (player.energy >= ability02.needEnergy)
@@ -380,7 +406,7 @@ namespace NameBattleSystem
                 if (player.isParry == false && Input.GetKey(KeyCode.LeftArrow) && Time.timeScale == 1 && player.isHitRecovery == false && control.isCatching == false && motionStop == false)
                 {
                     print("玩家使用盾反");
-                    ParryShieldAnimator.SetTrigger("Start");
+                    PlayerParryShieldAnimator.SetTrigger("Start");
                     player.isParry = true;
                     StartCoroutine(ParryTimeCount(player));
                 }
@@ -423,6 +449,7 @@ namespace NameBattleSystem
                 player.hitRecoveryTimeMax = player.abilityStartHitRecoveryTime + player.abilityEndHitRecoveryTime;
                 player.isHitRecovery = true;
                 playerAnimation.SetTrigger("Ability");
+                PlayerAbilityHintAnimator.SetTrigger("Slide");
                 StartCoroutine(AbilityButtonPress());
                 Invoke("playerAbility015", 0.9f - 0.25f);
                 StartCoroutine(UseStrongAbility(player, enemy, Player, Enemy, ability02));
@@ -466,6 +493,10 @@ namespace NameBattleSystem
                 PlayerPart01.GetComponent<SpriteRenderer>().color = playerColor;
                 PlayerPart02.GetComponent<SpriteRenderer>().color = playerColor;
                 PlayerPart03.GetComponent<SpriteRenderer>().color = playerColor;
+                PlayerPart04.GetComponent<SpriteRenderer>().color = playerColor;
+                PlayerPart05.GetComponent<SpriteRenderer>().color = playerColor;
+                PlayerPart06.GetComponent<SpriteRenderer>().color = playerColor;
+                PlayerPart07.GetComponent<SpriteRenderer>().color = playerColor;
             }
             if (enemy.hurtTime <= 0)
             {
@@ -485,13 +516,13 @@ namespace NameBattleSystem
             RCD01 -= Time.fixedDeltaTime * Time.timeScale;
             RCD02 -= Time.fixedDeltaTime * Time.timeScale;
 
-            if (player.defStatus == 1)
+            if (player.defStatus == 1 && motionStop == false)
             {
                 if (player.def > 0 || player.mDef > 0)
                 {
-                    player.def -= 0.1f * player.maxDef * Time.fixedDeltaTime;
-                    player.mDef -= 0.1f * player.maxMDef * Time.fixedDeltaTime;
-                    if (ParryShieldAnimator.GetCurrentAnimatorStateInfo(0).IsName("Parry Shield idle"))
+                    player.def -= 0.05f * player.maxDef * Time.fixedDeltaTime;
+                    player.mDef -= 0.05f * player.maxMDef * Time.fixedDeltaTime;
+                    if (PlayerParryShieldAnimator.GetCurrentAnimatorStateInfo(0).IsName("Parry Shield idle"))
                     {
                         playerShield.SetActive(true);
                     }
@@ -505,8 +536,8 @@ namespace NameBattleSystem
             if (enemy.defStatus == 1 && motionStop == false)
             {
                 enemyShield.SetActive(true);
-                enemy.def -= 0.1f * enemy.maxDef * Time.fixedDeltaTime;
-                enemy.mDef -= 0.1f * enemy.maxMDef * Time.fixedDeltaTime;
+                enemy.def -= 0.05f * enemy.maxDef * Time.fixedDeltaTime;
+                enemy.mDef -= 0.05f * enemy.maxDef * Time.fixedDeltaTime;
             }
             else
             {
@@ -539,8 +570,6 @@ namespace NameBattleSystem
             }
             if (enemy.hitRecoveryTime <= 0 && control.DecideingCatch == false)
             {
-                enemyAnimation.SetBool("Hit completely", false);
-                enemyAnimation.SetBool("Hit miss", false);
                 enemy.isHitRecovery = false;
                 enemy.hitRecoveryTime = 0;
             }
@@ -569,6 +598,7 @@ namespace NameBattleSystem
         }
         public void attack(pratiti atker, pratiti defer, ability ability)
         {
+            StartCoroutine(CameraShake());
             if (defer.def < 0)
             {
                 defer.def = 0;
@@ -577,7 +607,7 @@ namespace NameBattleSystem
             {
                 defer.mDef = 0;
             }
-            chance = Random.Range(1, 101);
+            chance = UnityEngine.Random.Range(1, 101);
 
             if ((chance + defer.agi - atker.agi) <= ability.hitRate)
             {
@@ -587,19 +617,24 @@ namespace NameBattleSystem
                     defer.isParry = false;
                     StartCoroutine(ParryTimeSlowDown());
                     defer.ParrySuccess = true;
-                    ParryShieldAnimator.SetTrigger("Success");
+                    PlayerParryShieldAnimator.SetTrigger("Success");
+
                     Damage = 0.0005f * ability.power * 0.1f * (atker.atk + atker.mAtk);
+                    Damage = (float)Math.Ceiling((double)Damage);
                     StartCoroutine(NumberChange(Damage, defer, "hp"));
                     StartCoroutine(NumberChange(ability.gainEnergy, atker, "gainEnergy"));
-                    Damage = (int)Damage;
+
                     damage.GetComponentInChildren<Text>().text = "-" + Damage.ToString();
-                    random01 = Random.Range(-3, 5);
-                    random02 = Random.Range(3, 6);
+                    random01 = UnityEngine.Random.Range(-3, 5);
+                    random02 = UnityEngine.Random.Range(3, 6);
                     Instantiate(damage, defer.gameObj01.transform.position + new Vector3(random01 * 0.2f, random02 * 0.2f), new Quaternion(0, 0, 0, 0));
                     defer.gameObj01.GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
                     defer.gameObj02.GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
                     defer.gameObj03.GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
                     defer.gameObj04.GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
+                    defer.gameObj05.GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
+                    defer.gameObj06.GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
+                    defer.gameObj07.GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
                     defer.hurtTime = 0.25f;
                     if (ability.gainEnergy > 0)
                     {
@@ -614,11 +649,12 @@ namespace NameBattleSystem
                         }
                     }
                     Damage = 0.0005f * ability.power * (atker.atk + atker.mAtk);
+                    Damage = (float)Math.Ceiling((double)Damage);
                     StartCoroutine(NumberChange(Damage, atker, "hp"));
-                    Damage = (int)Damage;
+
                     damage.GetComponentInChildren<Text>().text = "-" + Damage.ToString();
-                    random01 = Random.Range(-3, 5);
-                    random02 = Random.Range(3, 6);
+                    random01 = UnityEngine.Random.Range(-3, 5);
+                    random02 = UnityEngine.Random.Range(3, 6);
                     Instantiate(damage, atker.gameObj01.transform.position + new Vector3(random01 * 0.2f, random02 * 0.2f), new Quaternion(0, 0, 0, 0));
                     //Instantiate(damage, new Vector3(-3.1f,3.1f), new Quaternion(0, 0, 0, 0));
                     //Instantiate(damage, new Vector3(3.1f, 2.9f), new Quaternion(0, 0, 0, 0));
@@ -626,6 +662,9 @@ namespace NameBattleSystem
                     atker.gameObj02.GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
                     atker.gameObj03.GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
                     atker.gameObj04.GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
+                    defer.gameObj05.GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
+                    defer.gameObj06.GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
+                    defer.gameObj07.GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
                     atker.hurtTime = 0.25f;
                 }
                 else
@@ -633,7 +672,7 @@ namespace NameBattleSystem
                     //傷害值計算                                                                  //90%是滿減傷
                     Damage = 0.0005f * ability.power * (atker.atk + atker.mAtk - defer.defStatus * 0.9f *
                              (atker.atk * defer.def / defer.maxDef + atker.mAtk * defer.mDef / defer.maxMDef));
-                    Damage = (int)Damage;
+                    Damage = (float)Math.Ceiling((double)Damage);
 
                     //呼叫各數值遞減的協程函式
                     StartCoroutine(NumberChange(Damage, defer, "hp"));
@@ -642,8 +681,8 @@ namespace NameBattleSystem
                     StartCoroutine(NumberChange(ability.gainEnergy, atker, "gainEnergy"));
 
                     //產生顯示傷害數值位置的偏移亂數
-                    random01 = Random.Range(-3, 5);
-                    random02 = Random.Range(3, 6);
+                    random01 = UnityEngine.Random.Range(-3, 5);
+                    random02 = UnityEngine.Random.Range(3, 6);
                     damage.GetComponentInChildren<Text>().text = "-" + Damage.ToString(); //將傷害數值文字化
                     //在畫面上產生傷害數值
                     Instantiate(damage, defer.gameObj01.transform.position + new Vector3(random01 * 0.2f, random02 * 0.2f), new Quaternion(0, 0, 0, 0));
@@ -653,6 +692,9 @@ namespace NameBattleSystem
                     defer.gameObj02.GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
                     defer.gameObj03.GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
                     defer.gameObj04.GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
+                    defer.gameObj05.GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
+                    defer.gameObj06.GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
+                    defer.gameObj07.GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
                     defer.hurtTime = 0.25f;
                     if (ability.gainEnergy > 0)
                     {
@@ -674,8 +716,8 @@ namespace NameBattleSystem
                 {
                     defer.ParrySuccess = true;
                 }
-                random01 = Random.Range(-4, 5);
-                random02 = Random.Range(1, 6);
+                random01 = UnityEngine.Random.Range(-4, 5);
+                random02 = UnityEngine.Random.Range(1, 6);
                 Instantiate(miss, defer.gameObj01.transform.position + new Vector3(random01 * 0.3f, random02 * 0.3f), new Quaternion(0, 0, 0, 0));
             }
         }
@@ -752,13 +794,13 @@ namespace NameBattleSystem
                         case "hp":
                             if (Number < 10)
                             {
-                                Pratiti.hp -= (int)(Number * 0.5f);
-                                Number -= (int)(Number * 0.5f);
+                                Pratiti.hp -= (Number * 0.5f);
+                                Number -= (Number * 0.5f);
                             }
                             else
                             {
-                                Pratiti.hp -= (int)(Number * 0.1f);
-                                Number -= (int)(Number * 0.1f);
+                                Pratiti.hp -= (Number * 0.1f);
+                                Number -= (Number * 0.1f);
                             }
                             break;
                         case "def":
@@ -788,22 +830,43 @@ namespace NameBattleSystem
             switch (DataType)
             {
                 case "hp":
-                    Pratiti.hp -= (int)Number;
+                    Pratiti.hp = (int)Pratiti.hp;
                     break;
                 case "def":
-                    Pratiti.def -= Number;
+                    Pratiti.def = (int)Pratiti.def;
                     break;
                 case "mDef":
-                    Pratiti.mDef -= Number;
+                    Pratiti.mDef = (int)Pratiti.mDef;
                     break;
                 case "energy":
-                    Pratiti.energy -= Number;
+                    Pratiti.energy = (int)Pratiti.energy;
                     if (Pratiti.energy < 0)
                     {
                         Pratiti.energy = 0;
                     }
                     break;
             }
+        }
+        IEnumerator CameraShake()
+        {
+            int times = 1;
+            while (times <= 10)
+            {
+                float x = UnityEngine.Random.Range(0, 0.3f);
+                float y = UnityEngine.Random.Range(0, 0.15f);
+                Camera.transform.position = new Vector3(x, y, Camera.transform.position.z);
+                //PlayerAbilityHint.transform.position = new Vector3(x, y);
+                //EnemyAbilityHint.transform.position = new Vector3(x, y);
+                times += 1;
+                yield return new WaitForFixedUpdate();
+                yield return new WaitForFixedUpdate();
+                yield return new WaitForFixedUpdate();
+                yield return new WaitForFixedUpdate();
+            }
+            Camera.transform.position = new Vector3(0, 0, Camera.transform.position.z);
+            //PlayerAbilityHint.transform.position = new Vector3(0, 0, 0);
+            //EnemyAbilityHint.transform.position = new Vector3(0, 0, 0);
+            print("抖動結束");
         }
     }
 }

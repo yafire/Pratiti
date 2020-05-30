@@ -56,7 +56,8 @@ namespace NameBattleSystem
             {
                 if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.X) || Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.Escape))
                 {
-                    SceneManager.LoadScene("Battle");
+                    //SceneManager.LoadScene("Battle");
+                    SceneManager.LoadScene(UData.Map);
                 }
             }
             if (Input.GetKeyDown(KeyCode.Escape) && MENU.activeSelf == false && DessertMenu.activeSelf == false && DecideingCatch == false)

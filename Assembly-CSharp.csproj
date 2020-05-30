@@ -63,6 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\BattleSystem\BattleSystemData\BattleDataBase.cs" />
     <Compile Include="Assets\BattleSystem\BattleSystemData\PratitiBattleData.cs" />
     <Compile Include="Assets\BattleSystem\BattleSystemData\PratitiBattleDataBase.cs" />
     <Compile Include="Assets\BattleSystem\BattleSystemScript\BattleSystem.cs" />
