@@ -34,27 +34,34 @@ namespace NameBattleSystem
                 isAttacking = true;
                 //currentFrame++; //計算動畫持續的幀數
             }
-            else if (isInterrputed)  //角色處於提前中斷攻擊狀態，角色開始跳躍回初始位置
+            if (Ani.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.97f && Ani.GetCurrentAnimatorStateInfo(0).IsName("Attack")) //角色攻擊動畫進度超過一般攻擊判定期間
+            {
+                //角色攻擊未命中，攻擊判定結束
+                isAttacking = false;
+                //currentFrame = 1;
+                Ani.SetTrigger("Hit Miss");
+                BattleSystem.LCD = BattleSystem.ability01.cd;   //攻擊進入冷卻
+            }
+            if (isInterrputed)  //角色處於提前中斷攻擊狀態，角色開始跳躍回初始位置
             {
                 //角色水平位置漸漸回到初始水平位置
-                //this.transform.position -= new Vector3(0.025f * distanceX, 0);
                 this.transform.position -= new Vector3(0.025f * distanceX, 0);
                 if (isWait)
                 {
                     //若角色已回到初始位置則回到靜止初始狀態
-                    if (distanceX > 0 && this.transform.position.x <= -4)
+                    if (distanceX > 0 && this.transform.position.x <= -4 * this.transform.localScale.x)
                     {
-                        this.transform.position = new Vector3(-4, this.transform.position.y);
+                        this.transform.position = new Vector3(-4 * this.transform.localScale.x, this.transform.position.y);
                     }
-                    if (distanceX < 0 && this.transform.position.x >= -4)
+                    else if (distanceX < 0 && this.transform.position.x >= -4 * this.transform.localScale.x)
                     {
-                        this.transform.position = new Vector3(-4, this.transform.position.y);
+                        this.transform.position = new Vector3(-4 * this.transform.localScale.x * this.transform.localScale.x, this.transform.position.y);
                     }
 
-                    if (distanceX > 0 && this.transform.position.x <= -4 && this.transform.position.y <= -0.5f)
+                    if (distanceX > 0 && this.transform.position.x <= -4 * this.transform.localScale.x && this.transform.position.y <= -0.5f)
                     {
                         rig2d.constraints = RigidbodyConstraints2D.FreezePositionY;
-                        this.transform.position = new Vector3(-4, -0.5f);
+                        this.transform.position = new Vector3(-4 * this.transform.localScale.x, -0.5f);
                         isInterrputed = false;
                         isWait = false;
                     }
@@ -67,28 +74,22 @@ namespace NameBattleSystem
                     }
                 }
             }
-            else if (Ani.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.99f) 
+            else if (Ani.GetCurrentAnimatorStateInfo(0).IsName("Hit Interrupt") && Ani.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.99f) 
             {
                 this.transform.position = new Vector3(0, 0);
-            }
-            if (Ani.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.95f && Ani.GetCurrentAnimatorStateInfo(0).IsName("Attack")) //角色攻擊動畫進度超過一般攻擊判定期間
-            {
-                //角色攻擊未命中，攻擊判定結束
-                isAttacking = false;
-                //currentFrame = 1;
-                Ani.SetTrigger("Hit Miss");
-                BattleSystem.LCD = BattleSystem.ability01.cd;   //攻擊進入冷卻
             }
         }
 
         public void OnTriggerStay2D(Collider2D collider)    //角色與角色的碰撞函式
         {
+            print("碰撞到" + collider.name);
+            print(Ani.GetCurrentAnimatorStateInfo(0).normalizedTime);
             if (Ani.GetCurrentAnimatorStateInfo(0).IsName("Attack")) 
             {
                 if (collider.gameObject.tag == "BattlePratiti" && isAttacking == true) //撞擊對象為敵人且處於攻擊判定
                 {
                     //print(currentFrame);
-                    if (Ani.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f && Ani.GetCurrentAnimatorStateInfo(0).normalizedTime <= 0.95f) //角色攻擊動畫進度處於一般攻擊判定期間
+                    if (Ani.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.92f && Ani.GetCurrentAnimatorStateInfo(0).normalizedTime <= 0.97f) //角色攻擊動畫進度處於一般攻擊判定期間
                     {
                         print("player attack complete");
                         //呼叫攻擊函式
@@ -99,7 +100,7 @@ namespace NameBattleSystem
                         Ani.SetTrigger("Hit Complete");
                         BattleSystem.LCD = BattleSystem.ability01.cd;   //攻擊進入冷卻
                     }
-                    else if (Ani.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.9f && currentFrame != 1)   //角色攻擊動畫進度提前於一般攻擊判定期間
+                    else if (Ani.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.92f)   //角色攻擊動畫進度提前於一般攻擊判定期間
                     {
                         print("player attack interrupt");
                         //呼叫攻擊函式
@@ -119,7 +120,8 @@ namespace NameBattleSystem
             isInterrputed = true;
             //宣告角色碰撞時的座標以及與角色初始位置的水平距離
             position = Gameobj.transform.position;
-            distanceX = Gameobj.transform.position.x + 4;
+            distanceX = Gameobj.transform.position.x * this.transform.localScale.x - (-4 * this.transform.localScale.x);
+            //distanceX = distanceX * this.transform.localScale.x;
             force = Math.Abs(85 / distanceX);//計算角色跳躍上升力的大小
             Ani.SetTrigger("Hit Interrupt");
             //規定角色跳躍上升力大小的範圍
