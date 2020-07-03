@@ -42,6 +42,8 @@ public class Controller : MonoBehaviour
 
 	public virtual void Control()
 	{
+        Move(0);
+
         // bool upKey = Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.LeftArrow);
         if (UData.IsTalking)
         {

@@ -74,7 +74,6 @@ public class FungusManagerSystem : IGameSystem
         
         switch (name)
         {
-            
             case "P":
                 return GameObject.Find("FungusPrice").GetComponent<Flowchart>();
             case "M":

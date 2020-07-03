@@ -13,11 +13,14 @@ public class BattleUseData : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        m_PratitiData = GameObject.Find("GameData").GetComponent<PratitiData>();
+        m_PratitiData = GetComponent<PratitiData>();
+        Debug.Log("m_PratitiData.pratitiData" + m_PratitiData.pratitiData);
     }
 
     public void SetPlayerData()
     {
+
+        Debug.Log("m_PratitiData.pratitiData[0]" + m_PratitiData.pratitiData.Count);
         PlayerPratiti = m_PratitiData.pratitiData[0];
     }
 

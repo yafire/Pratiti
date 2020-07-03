@@ -8,30 +8,18 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameTitle.unity
     guid: 4c6fee6f5e821f44aaa132d92d2401ec
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
   - enabled: 1
     path: Assets/Picture/MapObject/Map.unity
     guid: 405215f1f5f4048438f6b75e433bd560
   - enabled: 1
     path: Assets/Scenes/EndBattle.unity
     guid: c31071a6468ec474b923bbacd08fa3df
-  - enabled: 0
-    path: 
-    guid: e9f821814fecccc42bc3b658e784df9d
-  - enabled: 1
-    path: Assets/Scenes/LoseBattle.unity
-    guid: 27b3cb49a3dff4afabc6cd4bcdcfccc8
-  - enabled: 0
-    path: 
-    guid: 11ee50571f76f0d46bd4ad0936353a13
   - enabled: 1
     path: Assets/BattleSystem/BattleSystemScene/Battle.unity
     guid: 51d19e08d4c7f874f8c8f2317689f2f3
+  - enabled: 1
+    path: Assets/Scenes/LoseBattle.unity
+    guid: 27b3cb49a3dff4afabc6cd4bcdcfccc8
   - enabled: 1
     path: Assets/BattleSystem/BattleSystemScene/Lose.unity
     guid: 178ec25ff1df8264ba2882092784d612

@@ -19,17 +19,10 @@ public class PratitiData : MonoBehaviour
 
     public void Awake()
     {
-        pratitiData.Clear();
+        // pratitiData.Clear();
         PratitiDataPath = @"Assets/PratitiData/PratitiDataJsonInfo.txt";
         //LoadPratitiData();
-        
-        PratitiController pC = new PratitiController();
-        PratitiController pC2 = new PratitiController();
 
-        pC.RandomData(pig);
-        pratitiData.Add(pC.toControl);
-        pC2.RandomData(feather);
-        pratitiData.Add(pC2.toControl);
 
         SavePratitiData(pratitiData);   //存檔方式
         //LoadPratitiData();          //讀檔方式

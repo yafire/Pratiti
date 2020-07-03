@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEditor;
 using Fungus;
 using InventorySystem;
+using UnityEngine.SceneManagement;
+
 public class PratitiTalkAndMove : MonoBehaviour
 {
     // 取得 Flowchart
@@ -71,20 +73,28 @@ public class PratitiTalkAndMove : MonoBehaviour
 
     private void Update()
     {
+        //transform.position += new Vector3(10, 0, 0);
         EnterBattle();
     }
 
     // 進入戰鬥
     public void EnterBattle()
     {
+        //transform.position += new Vector3(10, 0, 0);
         // 按下Z鍵且可以開始對話啟動（inView = true）
         if (Input.GetKeyDown(KeyCode.Z) && inView)
         {
+            // transform.position += new Vector3(0, 10, 0);
             // 當onCollosionEnter不是空白、不在對話中才能觸發
+            
             if (!UData.IsTalking)
             {
+                // transform.position += new Vector3(-10, 0, 0);
                 SystemController.Instance.SetBattleData(thisPratiti, getItem);
-                PlayBlock("StartBattle");
+                // SceneManager.LoadScene("Battle");
+                SystemController.Instance.PlayBlock("M", "StartBattle");
+                //PlayBlock("StartBattle");
+
             }
         }
     }
@@ -135,6 +145,7 @@ public class PratitiTalkAndMove : MonoBehaviour
         else
         {
             Debug.LogError("找不到在" + talkForchart.name + "裡的" + targetBlockName + "Block");
+            
         }
 
     }
